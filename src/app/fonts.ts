@@ -1,4 +1,3 @@
-
 export enum Fonts {
-    Oxanium= "Oxanium"
+    Oxanium = "Oxanium"
 }

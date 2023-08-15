@@ -19,18 +19,18 @@ export class StormRenderSystem implements GameRenderSystem {
     }
 
 
-    refreshParticle(particle: Particle) : Particle {
+    refreshParticle(particle: Particle): Particle {
 
 
-        particle.x = getRandomBetween(0,Renderer.getCanvasWidth());
-        particle.y = getRandomBetween(0,Renderer.getCanvasHeight());
-        particle.width = getRandomBetween(25,500);
-        particle.height = getRandomBetween(25,900);
-        particle.color = new Color(92, 55, 43, getRandomBetween(1,100) / 1000);
-        particle.lifeSpan = getRandomBetween(80,100);
-        particle.velX = getRandomBetween(1,100) / 10;
-        particle.velY = getRandomBetween(1,100) / 100;
-        particle.decayRate = getRandomBetween(1,5);
+        particle.x = getRandomBetween(0, Renderer.getCanvasWidth());
+        particle.y = getRandomBetween(0, Renderer.getCanvasHeight());
+        particle.width = getRandomBetween(25, 500);
+        particle.height = getRandomBetween(25, 900);
+        particle.color = new Color(92, 55, 43, getRandomBetween(1, 100) / 1000);
+        particle.lifeSpan = getRandomBetween(80, 100);
+        particle.velX = getRandomBetween(1, 100) / 10;
+        particle.velY = getRandomBetween(1, 100) / 100;
+        particle.decayRate = getRandomBetween(1, 5);
 
         return particle;
     }
