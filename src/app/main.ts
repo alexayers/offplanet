@@ -6,6 +6,7 @@ import {LocalStorageDB} from "@lib/localStorage/localStorageDB";
 import {Screens} from "./screens/screens";
 import {PlanetSurface} from "./screens/planetSurface";
 import {MainMenuScreen} from "./screens/mainMenuScreen";
+import {BackStoryScreen} from "./screens/backStoryScreen";
 
 export class Game extends TeenyTinyTwoDeeApp {
 
@@ -26,10 +27,10 @@ export class Game extends TeenyTinyTwoDeeApp {
         const gameScreens: Map<string, GameScreen> = new Map<string, GameScreen>();
 
         gameScreens.set(Screens.MAIN_MENU, new MainMenuScreen());
+        gameScreens.set(Screens.BACK_STORY, new BackStoryScreen());
         gameScreens.set(Screens.PLANET_SURFACE, new PlanetSurface());
 
         this.run(gameScreens, Screens.PLANET_SURFACE);
-
 
     }
 

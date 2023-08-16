@@ -18,4 +18,8 @@ canvas {
     src: url('../assets/fonts/Oxanium-Regular.ttf');
 }
 
+@font-face {
+    font-family: 'OxaniumBold';
+    src: url('../assets/fonts/Oxanium-ExtraBold.ttf');
+}
 

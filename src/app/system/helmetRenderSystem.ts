@@ -22,21 +22,33 @@ export class HelmetRenderSystem implements GameRenderSystem {
         let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
         let camera: CameraComponent = player.getComponent("camera") as CameraComponent;
 
+
+
+
+
         this.renderDamaged(camera);
         this.renderMessage(camera)
 
         let oxygen: OxygenComponent = player.getComponent("oxygen") as OxygenComponent;
 
-        Renderer.print(`Oxygen: ${oxygen.current}%`, 10, Renderer.getCanvasHeight() - 100, {
+        Renderer.print(`Oxygen:`, 10, Renderer.getCanvasHeight() - 100, {
             family: Fonts.Oxanium,
             size: 16,
             color: new Color(255, 255, 255, 0.45)
         });
-        Renderer.print(`Radiation Level: ${oxygen.current}%`, 10, Renderer.getCanvasHeight() - 80, {
+
+        Renderer.rect(90, Renderer.getCanvasHeight() - 113, 100,15, new Color(255,255,255, 0.35))
+
+        Renderer.print(`Shields:`, 10, Renderer.getCanvasHeight() - 70, {
             family: Fonts.Oxanium,
             size: 16,
             color: new Color(255, 255, 255, 0.45)
         });
+
+        Renderer.rect(90, Renderer.getCanvasHeight() - 83, 100,15, new Color(255,255,255, 0.35))
+
+
+
 
         this.renderHelmetEffect();
 

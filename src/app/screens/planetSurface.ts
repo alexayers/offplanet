@@ -34,11 +34,20 @@ import {ButtonWidget, ButtonWidgetBuilder} from "@lib/ui/buttonWidget";
 import {OnPowerAnimatedSpriteComponent} from "../components/onPowerAnimatedSpriteComponent";
 import {WhenDestroyedComponent} from "../components/whenDestroyedComponent";
 import {OnPowerLossSpriteComponent} from "../components/onPowerLossSpriteComponent";
+import {AudioManager} from "@lib/audio/audioManager";
+import {GameRenderSystem} from "@lib/ecs/gameRenderSystem";
+import {MissionRenderSystem} from "../system/missionRenderSystem";
 
 export class PlanetSurface extends GameScreenBase implements GameScreen {
 
 
     protected _airLockComputer: WindowWidget;
+    private _playNewError: boolean = true;
+    private _startFadeOut : boolean = false;
+    private _alphaFade : number = 1;
+    private _fadeTick:number = 0;
+    private _fadeRate : number = 16;
+
 
     constructor() {
         super();
@@ -47,12 +56,19 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
     init(): void {
 
+
+        AudioManager.register("drilling", require("../../assets/sound/drilling.wav"), true);
+        AudioManager.register("dirtStep", require("../../assets/sound/stepDirt.wav"));
+        AudioManager.register("error", require("../../assets/sound/error.wav"));
+        AudioManager.register("wind", require("../../assets/sound/wind.wav"), true);
+        AudioManager.register("generatorRunning", require("../../assets/sound/generatorRunning.wav"), true);
+
         GlobalState.createState("powerSupplyFunctional", false);
 
         this.createTranslationMap();
         this.createGameMap();
 
-        this._camera = new Camera(65, 59, 0, 0.9, 0.66);
+        this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
 
         this._player = new GameEntityBuilder("player")
             .addComponent(this.createInventory())
@@ -69,10 +85,10 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         this._postRenderSystems.push(new StormRenderSystem());
         this._postRenderSystems.push(new HelmetRenderSystem());
+        this._postRenderSystems.push(new MissionRenderSystem());
 
         this.powerGeneration();
     }
-
 
 
     createGameMap() : void {
@@ -210,6 +226,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
                 let value: boolean = GlobalState.getState("powerSupplyFunctional");
 
                 if (value == false) {
+
                     Renderer.rect((Renderer.getCanvasWidth() / 2) - 10, (Renderer.getCanvasHeight() / 2) - 20, 105, 40, Colors.BLACK())
 
                     Renderer.print("No Power", Renderer.getCanvasWidth() / 2, Renderer.getCanvasHeight() / 2, {
@@ -274,6 +291,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
             }))
             .addComponent(new WhenRepairedComponent((): void => {
                 GlobalState.updateState("powerSupplyFunctional", true);
+                AudioManager.play("generatorRunning");
                 logger(LogType.INFO, "Power restored");
             }))
             .addComponent(new DamagedComponent(100, new Sprite(128, 128, require("../../assets/images/damagedGenerator.png"))))
@@ -320,13 +338,57 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
 
     onEnter(): void {
+        AudioManager.play("wind");
     }
 
     onExit(): void {
     }
 
 
+    renderLoop(): void {
 
+        this._renderSystems.forEach((renderSystem: GameRenderSystem):
+        void => {
+            renderSystem.process();
+        });
+
+        this._translationTable.forEach((gameEntity: GameEntity): void => {
+            if (gameEntity.hasComponent("animatedSprite")) {
+                let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
+                animatedSprite.animatedSprite.nextFrame();
+            }
+        });
+
+
+        this.sway();
+        this.holdingItem()
+
+        this._postRenderSystems.forEach((renderSystem: GameRenderSystem):
+        void => {
+            renderSystem.process();
+        });
+
+
+        this._widgetManager.render();
+
+        if (this._alphaFade > 0.1) {
+
+            this._fadeTick++;
+
+            if (this._fadeTick == this._fadeRate) {
+                this._fadeTick = 0;
+                this._alphaFade -= 0.09;
+            }
+
+            Renderer.print("The Outpost", 100, 250, {family: Fonts.OxaniumBold, size: 100, color: new Color(255,255,255, this._alphaFade)})
+        }
+
+       // Renderer.print("30 Days Until Storm ", 100, 250, {family: Fonts.OxaniumBold, size: 100, color: Colors.WHITE()})
+
+
+        this.wideScreen();
+
+    }
 
 
 }

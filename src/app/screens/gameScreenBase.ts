@@ -30,9 +30,14 @@ import {Renderer} from "@lib/rendering/renderer";
 import {Colors} from "@lib/utils/colorUtils";
 import {Color} from "@lib/primatives/color";
 import {Fonts} from "../fonts";
+import {AudioManager} from "@lib/audio/audioManager";
+import {getRandomBetween} from "@lib/utils/mathUtils";
+import {Timer} from "@lib/utils/timerUtils";
 
 
 export class GameScreenBase {
+
+
     protected _moveSpeed: number = 0.225;
     protected _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     protected _gameSystems: Array<GameSystem> = [];
@@ -50,6 +55,8 @@ export class GameScreenBase {
     protected _requiresPower: Array<GameEntity> = [];
     protected _useTool: boolean = false;
     protected _translationTable: Map<number, GameEntity> = new Map<number, GameEntity>();
+    private _walkTimer: Timer = new Timer(120);
+
 
     constructor() {
 
@@ -148,6 +155,10 @@ export class GameScreenBase {
             this._updateSway = true;
             this._moves++;
             this.closeButtons();
+            if (this._walkTimer.isTimePassed()) {
+                this._walkTimer.reset();
+                AudioManager.play("dirtStep");
+            }
         }
 
         if (GlobalState.getState(`KEY_${KeyboardInput.DOWN}`)) {
@@ -156,6 +167,12 @@ export class GameScreenBase {
             this._updateSway = true;
             this._moves++;
             this.closeButtons();
+
+            if (this._walkTimer.isTimePassed()) {
+                this._walkTimer.reset();
+                AudioManager.play("dirtStep");
+            }
+
         }
         if (GlobalState.getState(`KEY_${KeyboardInput.LEFT}`)) {
             velocity.rotateLeft = true;
@@ -249,35 +266,7 @@ export class GameScreenBase {
         return inventory;
     }
 
-    renderLoop(): void {
 
-        this._renderSystems.forEach((renderSystem: GameRenderSystem):
-        void => {
-            renderSystem.process();
-        });
-
-        this._translationTable.forEach((gameEntity: GameEntity): void => {
-            if (gameEntity.hasComponent("animatedSprite")) {
-                let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
-                animatedSprite.animatedSprite.nextFrame();
-            }
-        });
-
-
-        this.sway();
-        this.holdingItem()
-
-        this._postRenderSystems.forEach((renderSystem: GameRenderSystem):
-        void => {
-            renderSystem.process();
-        });
-
-
-        this._widgetManager.render();
-
-        this.wideScreen();
-
-    }
 
     holdingItem(): void {
         let inventory: InventoryComponent = this._player.getComponent("inventory") as InventoryComponent;
@@ -289,7 +278,7 @@ export class GameScreenBase {
                 yOffset: number = Math.cos(this._moveSway) * 30;
 
             let holdingItemSprite: HoldingSpriteComponent = holdingItem.getComponent("holdingSprite") as HoldingSpriteComponent;
-            holdingItemSprite.sprite.render(200 + xOffset, 110 + yOffset, 512, 512);
+            holdingItemSprite.sprite.render(280 + xOffset, 110 + yOffset, 512, 512);
         }
 
     }
@@ -330,6 +319,7 @@ export class GameScreenBase {
         }
 
 
+     //   this.debug();
     }
 
 
