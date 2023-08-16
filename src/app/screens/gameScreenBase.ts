@@ -33,6 +33,9 @@ import {Fonts} from "../fonts";
 import {AudioManager} from "@lib/audio/audioManager";
 import {getRandomBetween} from "@lib/utils/mathUtils";
 import {Timer} from "@lib/utils/timerUtils";
+import {BuildingComponent} from "../components/buildingComponent";
+import {BuildActionComponent} from "@lib/ecs/components/interactions/buildActionComponent";
+import {ConstructionSystem} from "../system/constructionSystem";
 
 
 export class GameScreenBase {
@@ -60,26 +63,15 @@ export class GameScreenBase {
 
     constructor() {
 
-        this._gameSystems.push(
-            new CameraSystem()
-        );
 
-        this._gameSystems.push(
-            new InteractionSystem()
-        );
-
-        this._gameSystems.push(
-            new PickUpDropSystem()
-        );
-
-        this._gameSystems.push(
-            new RepairSystem()
-        );
-
-        this._gameSystems.push(
-            new DrillSystem()
-        )
-
+        this.registerSystems([
+            new CameraSystem(),
+            new InteractionSystem(),
+            new PickUpDropSystem(),
+            new RepairSystem(),
+            new DrillSystem(),
+            new ConstructionSystem()
+        ]);
     }
 
     sway(): void {
@@ -193,6 +185,8 @@ export class GameScreenBase {
 
             if (holdingItem.hasComponent("drill")) {
                 player.addComponent(new DrillingActionComponent())
+            } else if (holdingItem.hasComponent("building")) {
+                player.addComponent(new BuildActionComponent())
             } else {
                 player.addComponent(new InteractingActionComponent())
             }
@@ -251,18 +245,35 @@ export class GameScreenBase {
 
         let drill: GameEntity = new GameEntityBuilder("drill")
             .addComponent(new DrillComponent(10))
-            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/drillInventory.png"))))
-            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/drill.png"))))
+            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/drillInventory.png"))))
+            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/drill.png"))))
             .build();
 
         let wrench: GameEntity = new GameEntityBuilder("wrench")
             .addComponent(new RepairComponent(50))
-            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/wrenchInventory.png"))))
-            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/wrench.png"))))
+            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/wrenchInventory.png"))))
+            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/wrench.png"))))
+            .build();
+
+
+        let hammer: GameEntity = new GameEntityBuilder("hammer")
+            .addComponent(new DrillComponent(50))
+            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/hammerInventory.png"))))
+            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/hammer.png"))))
+            .build()
+
+        let building: GameEntity = new GameEntityBuilder("building")
+            .addComponent(new BuildingComponent())
+            .addComponent(new InventorySpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/buildingInventory.png"))))
+            .addComponent(new HoldingSpriteComponent(new Sprite(0, 0, require("../../assets/images/tools/building.png"))))
             .build()
 
         inventory.addItem(drill);
         inventory.addItem(wrench);
+        inventory.addItem(hammer);
+        inventory.addItem(building);
+
+
         return inventory;
     }
 
@@ -334,6 +345,14 @@ export class GameScreenBase {
             size: 10,
             color: Colors.WHITE()
         })
+    }
+
+    registerSystems(gameSystems: Array<GameSystem>): void {
+
+        gameSystems.forEach((gameSystem: GameSystem) : void => {
+            this._gameSystems.push(gameSystem);
+        })
+
     }
 
 }

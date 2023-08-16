@@ -1,4 +1,6 @@
 import {Camera} from "@lib/rendering/rayCaster/camera";
+import {Renderer} from "@lib/rendering/renderer";
+import {Sprite} from "@lib/rendering/sprite";
 
 
 export class TransparentWall {
@@ -6,18 +8,69 @@ export class TransparentWall {
     private _xMap: number;
     private _yMap: number;
     private _side: number;
-    private _xScreen;
+    private _sprite: Sprite;
+    private _xScreen: Array<number> =[];
     private _camera: Camera
     private _cameraXCoords;
 
-    constructor(camera: Camera, xMap: number, yMap: number, side: number, xScreen, cameraXCoords) {
+    constructor(sprite: Sprite, camera: Camera, xMap: number, yMap: number, side: number, xScreen: Array<number>, cameraXCoords) {
 
+        this._sprite = sprite;
         this._camera = camera;
         this._xMap = xMap;
         this._yMap = yMap;
         this._side = side;
         this._xScreen = xScreen;
         this._cameraXCoords = cameraXCoords;
+    }
+
+
+    get xMap(): number {
+        return this._xMap;
+    }
+
+    set xMap(value: number) {
+        this._xMap = value;
+    }
+
+    get yMap(): number {
+        return this._yMap;
+    }
+
+    set yMap(value: number) {
+        this._yMap = value;
+    }
+
+    get side(): number {
+        return this._side;
+    }
+
+    set side(value: number) {
+        this._side = value;
+    }
+
+    get xScreen() {
+        return this._xScreen;
+    }
+
+    set xScreen(value) {
+        this._xScreen = value;
+    }
+
+    get camera(): Camera {
+        return this._camera;
+    }
+
+    set camera(value: Camera) {
+        this._camera = value;
+    }
+
+    get cameraXCoords() {
+        return this._cameraXCoords;
+    }
+
+    set cameraXCoords(value) {
+        this._cameraXCoords = value;
     }
 
     getRayDir(x: number, side: number): number {
@@ -45,16 +98,12 @@ export class TransparentWall {
 
     draw(): void {
 
-
-        return;
-
-        /*
         Renderer.saveContext();
 
-        Renderer.setAlpha(0.5);
+        Renderer.setAlpha(0.25);
 
 
-        for (let x=this._xScreen[0]; x<this._xScreen[0] + this._xScreen.length; x++) {
+        for (let x: number=this._xScreen[0]; x<this._xScreen[0] + this._xScreen.length; x++) {
             let perpDist :number = this.getPerpDist(x);
             let lineHeight :number = Math.round(Renderer.getCanvasHeight() / perpDist);
             let drawStart :number = -lineHeight / 2 + Renderer.getCanvasHeight()/2;
@@ -69,15 +118,14 @@ export class TransparentWall {
             wallX -= Math.floor(wallX);
 
 
-            let texX = Math.floor(wallX * mapForceFieldPic.width);
-            Renderer.renderClippedImage(mapForceFieldPic, texX, 0, 1, mapForceFieldPic.height, x, drawStart, 1, lineHeight);
-
+            let texX: number = Math.floor(wallX * this._sprite.image.width);
+            Renderer.renderClippedImage(this._sprite.image, texX, 0, 1, this._sprite.image.height, x, drawStart, 1, lineHeight);
 
         }
 
         Renderer.restoreContext()
 
-         */
+
     }
 
 }

@@ -17,7 +17,7 @@ export class RayCaster {
 
     private _cameraXCoords: Array<number> = [];
     private _zBuffer: Array<number> = [];
-    private _tpWalls = [];
+    private _tpWalls : Array<TransparentWall> = [];
 
 
     constructor() {
@@ -123,18 +123,25 @@ export class RayCaster {
                         wallXOffset = worldMap.getDoorOffset(mapX, mapY) * stepX;
                     }
                 } else if (gameEntity.hasComponent("transparentWall")) {
+
+
+                    // A hit isn't registered because the ray goes through it.
+
                     if (side == 1) {
                         if (sideDistY - (deltaDistY / 2) < sideDistX) {
                             let wallDefined: boolean = false;
                             for (let i: number = 0; i < this._tpWalls.length; i++) {
-                                if (this._tpWalls[i].mapX == mapX && this._tpWalls[i].mapY == mapY) {
-                                    this._tpWalls[i].screenX.push(x);
+                                if (this._tpWalls[i].xMap == mapX && this._tpWalls[i].yMap == mapY) {
+                                    this._tpWalls[i].xScreen.push(x);
                                     wallDefined = true;
                                     break;
                                 }
                             }
+
+
                             if (!wallDefined) {
-                                let tpWall: TransparentWall = new TransparentWall(camera, mapX, mapY, side, x, this._cameraXCoords);
+                                let sprite : SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
+                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite,camera, mapX, mapY, side, [x], this._cameraXCoords);
                                 this._tpWalls.push(tpWall);
                             }
                         }
@@ -142,14 +149,17 @@ export class RayCaster {
                         if (sideDistX - (deltaDistX / 2) < sideDistY) {
                             let wallDefined: boolean = false;
                             for (let i: number = 0; i < this._tpWalls.length; i++) {
-                                if (this._tpWalls[i].mapX == mapX && this._tpWalls[i].mapY == mapY) {
-                                    this._tpWalls[i].screenX.push(x);
+                                if (this._tpWalls[i].xMap == mapX && this._tpWalls[i].yMap == mapY) {
+                                    this._tpWalls[i].xScreen.push(x);
                                     wallDefined = true;
                                     break;
                                 }
                             }
                             if (!wallDefined) {
-                                let tpWall: TransparentWall = new TransparentWall(camera, mapX, mapY, side, x, this._cameraXCoords);
+
+                                let sprite : SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
+
+                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite,camera, mapX, mapY, side, [x], this._cameraXCoords);
                                 this._tpWalls.push(tpWall);
                             }
                         }
@@ -194,30 +204,32 @@ export class RayCaster {
 
 
         let sprite: SpriteComponent;
-        let wallTex: Sprite;
+        let wallTexture: Sprite;
 
         if (gameEntity.hasComponent("sprite")) {
             sprite = gameEntity.getComponent("sprite") as SpriteComponent
-            wallTex = sprite.sprite;
+            wallTexture = sprite.sprite;
         } else if (gameEntity.hasComponent("animatedSprite")) {
             let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
-            wallTex = animatedSprite.animatedSprite.currentSprite();
+            wallTexture = animatedSprite.animatedSprite.currentSprite();
+        } else {
+            console.log(gameEntity)
         }
 
-        let texX: number = Math.floor(wallX * wallTex.image.width);
+        let texX: number = Math.floor(wallX * wallTexture.image.width);
         if (side == 0 && rayDirX > 0) {
-            texX = wallTex.image.width - texX - 1;
+            texX = wallTexture.image.width - texX - 1;
         } else if (side == 1 && rayDirY < 0) {
-            texX = wallTex.image.width - texX - 1;
+            texX = wallTexture.image.width - texX - 1;
         }
 
-        Renderer.renderClippedImage(wallTex.image, texX, 0, 1, wallTex.image.height, x, drawStart, 1, lineHeight);
+        Renderer.renderClippedImage(wallTexture.image, texX, 0, 1, wallTexture.image.height, x, drawStart, 1, lineHeight);
 
         if (gameEntity.hasComponent("damaged")) {
             let damaged: DamagedComponent = gameEntity.getComponent("damaged") as DamagedComponent;
 
             Renderer.setAlpha(damaged.damage / 100);
-            Renderer.renderClippedImage(damaged.damageSprite.image, texX, 0, 1, wallTex.image.height, x, drawStart, 1, lineHeight);
+            Renderer.renderClippedImage(damaged.damageSprite.image, texX, 0, 1, wallTexture.image.height, x, drawStart, 1, lineHeight);
         }
 
 
@@ -257,38 +269,37 @@ export class RayCaster {
         let gameEntities: Array<GameEntity> = World.getInstance().getWorldMap().items;
         let sprites: Array<Sprite> = [];
 
-        if (gameEntities == null) {
-            return;
-        }
+        if (gameEntities)  {
+            for (let i: number = 0; i < gameEntities.length; i++) {
+                order[i] = i;
 
-        for (let i: number = 0; i < gameEntities.length; i++) {
-            order[i] = i;
+                let gameEntity: GameEntity = gameEntities[i];
+                let sprite: SpriteComponent;
 
-            let gameEntity: GameEntity = gameEntities[i];
-            let sprite: SpriteComponent;
+                if (gameEntity.hasComponent("sprite")) {
+                    sprite = gameEntity.getComponent("sprite") as SpriteComponent;
+                } else if (gameEntity.hasComponent("animatedSprite")) {
+                    let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
+                    sprite = new SpriteComponent(animatedSprite.animatedSprite.currentSprite());
+                }
 
-            if (gameEntity.hasComponent("sprite")) {
-                sprite = gameEntity.getComponent("sprite") as SpriteComponent;
-            } else if (gameEntity.hasComponent("animatedSprite")) {
-                let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
-                sprite = new SpriteComponent(animatedSprite.animatedSprite.currentSprite());
+                let position: PositionComponent = gameEntity.getComponent("position") as PositionComponent;
+                spriteDistance[i] = ((camera.xPos - position.x) * (camera.xPos - position.x)) + ((camera.yPos - position.y) * (camera.yPos - position.y));
+
+
+                let distance: DistanceComponent = gameEntity.getComponent("distance") as DistanceComponent;
+
+                distance.distance = spriteDistance[i];
+
+                sprite.sprite.x = position.x;
+                sprite.sprite.y = position.y;
+
+                sprites.push(sprite.sprite);
             }
 
-            let position: PositionComponent = gameEntity.getComponent("position") as PositionComponent;
-            spriteDistance[i] = ((camera.xPos - position.x) * (camera.xPos - position.x)) + ((camera.yPos - position.y) * (camera.yPos - position.y));
-
-
-            let distance: DistanceComponent = gameEntity.getComponent("distance") as DistanceComponent;
-
-            distance.distance = spriteDistance[i];
-
-            sprite.sprite.x = position.x;
-            sprite.sprite.y = position.y;
-
-            sprites.push(sprite.sprite);
+            this.combSort(order, spriteDistance);
         }
 
-        this.combSort(order, spriteDistance);
 
         let tp: number = -1;
         if (this._tpWalls.length > 0) {
@@ -306,7 +317,7 @@ export class RayCaster {
 
             if (transformY > 0) {
                 for (tp; tp >= 0; tp--) {
-                    let tpDist: number = ((camera.xPos - this._tpWalls[tp].mapX) * (camera.xPos - this._tpWalls[tp].mapX)) + ((camera.yPos - this._tpWalls[tp].mapY) * (camera.yPos - this._tpWalls[tp].mapY));
+                    let tpDist: number = ((camera.xPos - this._tpWalls[tp].xMap) * (camera.xPos - this._tpWalls[tp].xMap)) + ((camera.yPos - this._tpWalls[tp].yMap) * (camera.yPos - this._tpWalls[tp].yMap));
                     if (spriteDistance[i] < tpDist) {
                         this._tpWalls[tp].draw();
                     } else {

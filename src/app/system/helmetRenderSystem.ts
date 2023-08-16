@@ -23,29 +23,53 @@ export class HelmetRenderSystem implements GameRenderSystem {
         let camera: CameraComponent = player.getComponent("camera") as CameraComponent;
 
 
-
-
-
         this.renderDamaged(camera);
         this.renderMessage(camera)
 
         let oxygen: OxygenComponent = player.getComponent("oxygen") as OxygenComponent;
 
-        Renderer.print(`Oxygen:`, 10, Renderer.getCanvasHeight() - 100, {
+        let offsetY : number = 100;
+
+        Renderer.print(`Oxygen:`, 10, Renderer.getCanvasHeight() - offsetY, {
             family: Fonts.Oxanium,
             size: 16,
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - 113, 100,15, new Color(255,255,255, 0.35))
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100,15, new Color(255,255,255, 0.35))
 
-        Renderer.print(`Shields:`, 10, Renderer.getCanvasHeight() - 70, {
+        offsetY -= 30;
+
+        Renderer.print(`Suit:`, 10, Renderer.getCanvasHeight() - offsetY, {
             family: Fonts.Oxanium,
             size: 16,
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - 83, 100,15, new Color(255,255,255, 0.35))
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100,15, new Color(255,255,255, 0.35))
+
+        ///
+
+        offsetY  = 100;
+
+        Renderer.print(`Hunger:`, 210, Renderer.getCanvasHeight() - offsetY, {
+            family: Fonts.Oxanium,
+            size: 16,
+            color: new Color(255, 255, 255, 0.45)
+        });
+
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100,15, new Color(255,255,255, 0.35))
+
+        offsetY -= 30;
+
+        Renderer.print(`Tired:`, 210, Renderer.getCanvasHeight() - offsetY, {
+            family: Fonts.Oxanium,
+            size: 16,
+            color: new Color(255, 255, 255, 0.45)
+        });
+
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100,15, new Color(255,255,255, 0.35))
+
 
 
 

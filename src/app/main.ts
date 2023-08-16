@@ -7,6 +7,7 @@ import {Screens} from "./screens/screens";
 import {PlanetSurface} from "./screens/planetSurface";
 import {MainMenuScreen} from "./screens/mainMenuScreen";
 import {BackStoryScreen} from "./screens/backStoryScreen";
+import {ScienceLabScreen} from "./screens/scienceLabScreen";
 
 export class Game extends TeenyTinyTwoDeeApp {
 
@@ -29,8 +30,9 @@ export class Game extends TeenyTinyTwoDeeApp {
         gameScreens.set(Screens.MAIN_MENU, new MainMenuScreen());
         gameScreens.set(Screens.BACK_STORY, new BackStoryScreen());
         gameScreens.set(Screens.PLANET_SURFACE, new PlanetSurface());
+        gameScreens.set(Screens.SCIENCE_LAB, new ScienceLabScreen())
 
-        this.run(gameScreens, Screens.PLANET_SURFACE);
+        this.run(gameScreens, Screens.SCIENCE_LAB);
 
     }
 

@@ -12,8 +12,6 @@ import {AudioManager} from "@lib/audio/audioManager";
 export class BackStoryScreen implements GameScreen {
 
     private _characterPosition1: number = 0;
-    private _characterPosition2: number = 0;
-    private _characterPosition3: number = 0;
     private _startFadeOut: boolean = false;
     private _alphaFade: number = 0;
 
@@ -48,50 +46,30 @@ export class BackStoryScreen implements GameScreen {
 
         let offsetY: number = 150;
 
-        let line1: string = "You are stranded on a small research outpost in the Vega Nexus system.";
-        let line2: string = "With limited resources and intense planetary storms your chance for rescue is slim.";
-        let line3: string = "But not impossible...";
-
-        let printLine1: string = line1.substring(0, this._characterPosition1);
-        Renderer.print(printLine1, 80, offsetY, {family: Fonts.Oxanium, size: 16, color: Colors.WHITE()})
-        offsetY += 30;
-
-        let printLine2: string = line2.substring(0, this._characterPosition2);
-
-        Renderer.print(printLine2, 80, offsetY, {family: Fonts.Oxanium, size: 16, color: Colors.WHITE()})
-        offsetY += 30;
-
-
-        let printLine3: string = line3.substring(0, this._characterPosition3);
-
-        Renderer.print(printLine3, 80, offsetY, {family: Fonts.Oxanium, size: 16, color: Colors.WHITE()})
+        let line : string = "You are stranded on a small research outpost in the Vega Nexus system.";
+        line += "With limited resources and intense planetary storms your chance for rescue is slim.";
+        line += " But not impossible...";
+        let printLine: string = line.substring(0, this._characterPosition1);
 
         this._tick++;
 
-        if (this._tick == this._tickRate) {
+        if (this._tick == this._tickRate && this._characterPosition1 < line.length) {
             this._tick = 0;
             this._characterPosition1++;
-
-            if (this._characterPosition1 > line1.length) {
-                this._characterPosition1 = line1.length;
-
-                this._characterPosition2++;
-
-                if (this._characterPosition2 > line2.length) {
-                    this._characterPosition2 = line2.length;
-
-                    this._characterPosition3++;
-
-                    if (this._characterPosition3 > line3.length) {
-                        this._characterPosition3 = line3.length;
-                        this._startFadeOut = true;
-                    }
-
-                }
-            }
-
         }
 
+        if (this._characterPosition1 >= line.length) {
+            this._startFadeOut = true;
+        }
+
+        let lines: Array<string> = Renderer.getLines(printLine, 600);
+
+        for (let i : number = 0; i < lines.length; i++) {
+
+            Renderer.print(lines[i], 80, offsetY, {family: Fonts.Oxanium, size: 16, color: Colors.WHITE()})
+            offsetY += 30;
+
+        }
 
         if (this._startFadeOut) {
 

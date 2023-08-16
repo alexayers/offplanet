@@ -20,13 +20,13 @@ export class MissionRenderSystem implements GameRenderSystem {
 
 
         if (GlobalState.getState("powerSupplyFunctional") == false) {
-            Renderer.print(`- No Power`, 30, offsetY, {
+            Renderer.print(`- Electric Generator [offline]`, 30, offsetY, {
                 family: Fonts.Oxanium,
                 size: 12,
                 color: new Color(255, 255, 255, 1.0)
             });
         } else {
-            Renderer.print(`- Power Levels Nominal`, 30, offsetY, {
+            Renderer.print(`- Electric Generator [100%]`, 30, offsetY, {
                 family: Fonts.Oxanium,
                 size: 12,
                 color: new Color(255, 255, 255, 1.0)
@@ -91,6 +91,38 @@ export class MissionRenderSystem implements GameRenderSystem {
             });
         } else {
             Renderer.print(`- Moisture Extractors [90%]`, 30, offsetY, {
+                family: Fonts.Oxanium,
+                size: 12,
+                color: new Color(255, 255, 255, 1.0)
+            });
+        }
+
+        offsetY += 20;
+
+        if (GlobalState.getState("powerSupplyFunctional") == false) {
+            Renderer.print(`- SatCom [Offline]`, 30, offsetY, {
+                family: Fonts.Oxanium,
+                size: 12,
+                color: new Color(255, 255, 255, 1.0)
+            });
+        } else {
+            Renderer.print(`- SatCom [90%]`, 30, offsetY, {
+                family: Fonts.Oxanium,
+                size: 12,
+                color: new Color(255, 255, 255, 1.0)
+            });
+        }
+
+        offsetY += 20;
+
+        if (GlobalState.getState("powerSupplyFunctional") == false) {
+            Renderer.print(`- Data Center [Offline]`, 30, offsetY, {
+                family: Fonts.Oxanium,
+                size: 12,
+                color: new Color(255, 255, 255, 1.0)
+            });
+        } else {
+            Renderer.print(`- Data Center [90%]`, 30, offsetY, {
                 family: Fonts.Oxanium,
                 size: 12,
                 color: new Color(255, 255, 255, 1.0)
