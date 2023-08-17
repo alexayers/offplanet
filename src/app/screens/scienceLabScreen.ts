@@ -31,6 +31,11 @@ import {TransparentComponent} from "@lib/ecs/components/transparentComponent";
 import {DoorComponent} from "@lib/ecs/components/doorComponent";
 import {DustRenderSystem} from "../system/dustRenderSystem";
 import {AirLockParticleRender} from "../system/airLockParticleRender";
+import {CanInteractComponent} from "@lib/ecs/components/canInteractComponent";
+import {GameEventBus} from "@lib/gameEvent/gameEventBus";
+import {ScreenChangeEvent} from "@lib/gameEvent/screenChangeEvent";
+import {Screens} from "./screens";
+import {AudioManager} from "@lib/audio/audioManager";
 
 
 export class ScienceLabScreen extends GameScreenBase implements GameScreen {
@@ -49,16 +54,20 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
     init(): void {
 
         this.createPlayer();
+        AudioManager.register("stepMetal", require("../../assets/sound/stepMetal.wav"));
+        AudioManager.register("airBlast", require("../../assets/sound/airBlast.wav"));
+        AudioManager.register("slidingDoor", require("../../assets/sound/slidingDoor.wav"));
+        AudioManager.register("stationHum", require("../../assets/sound/stationHum.wav"), true);
 
         this.registerRenderSystems([
             new RayCastRenderSystem(),
             new DustRenderSystem(),
-     //       new AirLockParticleRender()
+            new AirLockParticleRender()
         ]);
 
 
         this._postRenderSystems.push(new HelmetRenderSystem());
-        this._postRenderSystems.push(new MissionRenderSystem());
+    //    this._postRenderSystems.push(new MissionRenderSystem());
         this._postRenderSystems.push(new BuildingRenderSystem());
     //    GlobalState.updateState("powerSupplyFunctional", true);
 
@@ -105,8 +114,9 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
             .addComponent(new VelocityComponent(0, 0))
             .build();
 
-        this._gameEntityRegistry.registerSingleton(this._player);
+    //    this._gameEntityRegistry.registerSingleton(this._player);
     }
+
 
     createGameMap() : void {
         let grid: Array<number> = [];
@@ -157,10 +167,14 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
 
         let labDoor : GameEntity = new GameEntityBuilder("labDoor")
             .addComponent(new DoorComponent())
+            .addComponent(new CanInteractComponent(() => {
+                AudioManager.play("slidingDoor");
+            }))
             .addComponent(new SpriteComponent(new Sprite(0,0, require("../../assets/images/labDoor.png"))))
             .build();
 
         this.addEntity(3, labDoor);
+
 
         let airLock: GameEntity = new GameEntityBuilder("airLock")
             .addComponent(new WallComponent())
@@ -284,9 +298,11 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
 
         this.addEntity(20, freezerDoor);
 
-        let airLockDoor: GameEntity = new GameEntityBuilder("airLockDoor")
+        let airLockDoorInterior: GameEntity = new GameEntityBuilder("airLockDoorInterior")
             .addComponent(new WallComponent())
-            .addComponent(new DoorComponent())
+            .addComponent(new CanInteractComponent(() => {
+                GameEventBus.publish(new ScreenChangeEvent(Screens.PLANET_SURFACE))
+            }))
             .addComponent(new AnimatedSpriteComponent(new AnimatedSprite(0,0,
                 [
                     require("../../assets/images/airLockDoorPowered.png"),
@@ -310,7 +326,7 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
             .build();
 
 
-        this.addEntity(21, airLockDoor);
+        this.addEntity(21, airLockDoorInterior);
 
         let innerAirLock: GameEntity = new GameEntityBuilder("innerAirLock")
             .addComponent(new WallComponent())
@@ -324,11 +340,23 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
     onEnter(): void {
         this.createTranslationMap();
         this.createGameMap();
+
+        this._walkSound = "stepMetal";
+        AudioManager.play("airBlast");
+        AudioManager.play("stationHum");
         logger(LogType.INFO, "Entered Science Lab Screen");
+
+        let player : GameEntity = this._gameEntityRegistry.getSingleton("player");
+        this._camera = new Camera(6.5, 1.8, 0, 1, 0.66);
+        player.addComponent(new CameraComponent(this._camera));
+
     }
 
 
     onExit(): void {
+        AudioManager.play("airBlast");
+        AudioManager.stop("stationHum");
+
     }
 
     renderLoop(): void {
@@ -368,10 +396,10 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
 
             if (this._fadeTick == this._fadeRate) {
                 this._fadeTick = 0;
-                this._alphaFade -= 0.09;
+                this._alphaFade -= 0.19;
             }
 
-            Renderer.print("Research Lab", 50, 250, {family: Fonts.OxaniumBold, size: 100, color: new Color(255,255,255, this._alphaFade)})
+            Renderer.print("Delta Lab", 50, 250, {family: Fonts.OxaniumBold, size: 100, color: new Color(0,0,0, this._alphaFade)})
         }
     }
 

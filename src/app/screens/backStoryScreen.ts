@@ -15,6 +15,8 @@ export class BackStoryScreen implements GameScreen {
     private _startFadeOut: boolean = false;
     private _alphaFade: number = 0;
 
+    private _visorLine: number = 0;
+
     private _tick: number = 0;
     private _tickRate: number = 6;
 
@@ -47,7 +49,7 @@ export class BackStoryScreen implements GameScreen {
         let offsetY: number = 150;
 
         let line : string = "You are stranded on a small research outpost in the Vega Nexus system.";
-        line += "With limited resources and intense planetary storms your chance for rescue is slim.";
+        line += " With limited resources and intense planetary storms your chance for rescue is slim.";
         line += " But not impossible...";
         let printLine: string = line.substring(0, this._characterPosition1);
 
@@ -71,6 +73,8 @@ export class BackStoryScreen implements GameScreen {
 
         }
 
+        this.renderHelmetEffect();
+
         if (this._startFadeOut) {
 
 
@@ -85,4 +89,22 @@ export class BackStoryScreen implements GameScreen {
 
     }
 
+    renderHelmetEffect(): void {
+        let lineColor: Color = new Color(200, 240, 90, 0.223);
+
+        for (let y: number = 0; y < Renderer.getCanvasHeight(); y += 64) {
+            Renderer.line(0, y, Renderer.getCanvasWidth(), y, 1, lineColor);
+        }
+
+        for (let x: number = 0; x < Renderer.getCanvasWidth(); x += 64) {
+            Renderer.line(x, 0, x, Renderer.getCanvasHeight(), 1, lineColor);
+        }
+
+        Renderer.rect(0, this._visorLine, Renderer.getCanvasWidth(), 64, lineColor);
+        this._visorLine += 5;
+
+        if (this._visorLine > Renderer.getCanvasHeight()) {
+            this._visorLine = -100;
+        }
+    }
 }

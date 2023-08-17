@@ -40,6 +40,7 @@ import {logger, LogType} from "@lib/utils/loggerUtils";
 export class GameScreenBase {
 
 
+    protected _walkSound: string;
     protected _moveSpeed: number = 0.225;
     protected _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     protected _gameSystems: Array<GameSystem> = [];
@@ -70,6 +71,8 @@ export class GameScreenBase {
             new DrillSystem(),
             new ConstructionSystem()
         ]);
+
+        AudioManager.register("drill", require("../../assets/sound/drill.wav"));
 
         logger(LogType.INFO, "Systems registered")
     }
@@ -110,13 +113,12 @@ export class GameScreenBase {
         let velocity: VelocityComponent = player.getComponent("velocity") as VelocityComponent;
 
 
-
-        if (GlobalState.getState(`KEY_${KeyboardInput.ONE}`)) {
-            inventory.currentItemIdx = 0;
+        if (keyCode == KeyboardInput.ONE) {
+            inventory.currentItemIdx =0;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.TWO}`)) {
+        if (keyCode == KeyboardInput.TWO) {
             inventory.currentItemIdx = 1;
             this.closeButtons();
         }
@@ -149,7 +151,7 @@ export class GameScreenBase {
             this.closeButtons();
             if (this._walkTimer.isTimePassed()) {
                 this._walkTimer.reset();
-                AudioManager.play("dirtStep");
+                AudioManager.play(this._walkSound);
             }
         }
 
@@ -162,7 +164,7 @@ export class GameScreenBase {
 
             if (this._walkTimer.isTimePassed()) {
                 this._walkTimer.reset();
-                AudioManager.play("dirtStep");
+                AudioManager.play(this._walkSound);
             }
 
         }
@@ -185,6 +187,8 @@ export class GameScreenBase {
 
             if (holdingItem.hasComponent("drill")) {
                 player.addComponent(new DrillingActionComponent())
+                AudioManager.play("drill");
+
             } else if (holdingItem.hasComponent("building")) {
                 player.addComponent(new BuildActionComponent())
             } else {
@@ -270,7 +274,7 @@ export class GameScreenBase {
 
         inventory.addItem(drill);
         inventory.addItem(wrench);
-     //   inventory.addItem(hammer);
+      //  inventory.addItem(hammer);
      //   inventory.addItem(building);
 
 

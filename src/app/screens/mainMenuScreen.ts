@@ -24,6 +24,9 @@ export class MainMenuScreen implements GameScreen {
     init(): void {
 
         AudioManager.register("theme", require("../../assets/sound/theme.wav"));
+        AudioManager.register("boop", require("../../assets/sound/boop.wav"));
+
+
         this._menuItems.push("Begin");
         this._menuItems.push("Quit");
         this._timer.start(100);
@@ -46,6 +49,8 @@ export class MainMenuScreen implements GameScreen {
                     this._currentMenuIdx = this._menuItems.length - 1;
                 }
 
+                AudioManager.play("boop");
+
                 break;
             case KeyboardInput.DOWN:
                 this._currentMenuIdx++;
@@ -53,6 +58,8 @@ export class MainMenuScreen implements GameScreen {
                 if (this._currentMenuIdx == this._menuItems.length) {
                     this._currentMenuIdx = 0;
                 }
+
+                AudioManager.play("boop");
 
                 break;
             case KeyboardInput.ENTER:
@@ -70,6 +77,7 @@ export class MainMenuScreen implements GameScreen {
 
     mouseClick(x: number, y: number, mouseButton: MouseButton): void {
     }
+
 
     mouseMove(x: number, y: number): void {
     }
@@ -98,6 +106,7 @@ export class MainMenuScreen implements GameScreen {
         Renderer.circle(105,100, 410, new Color(138, 34, 14, 0.123 + getRandomBetween(1,5) / 100))
 
 
+        Renderer.print("Alex Ayers Presents:", 10, 115, {family: Fonts.OxaniumBold, size: 20, color: Colors.WHITE()})
         Renderer.print("The Outpost", 10, 200, {family: Fonts.OxaniumBold, size: 90, color: Colors.WHITE()})
 
 

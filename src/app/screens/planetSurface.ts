@@ -37,6 +37,9 @@ import {OnPowerLossSpriteComponent} from "../components/onPowerLossSpriteCompone
 import {AudioManager} from "@lib/audio/audioManager";
 import {GameRenderSystem} from "@lib/ecs/gameRenderSystem";
 import {MissionRenderSystem} from "../system/missionRenderSystem";
+import {GameEventBus} from "@lib/gameEvent/gameEventBus";
+import {ScreenChangeEvent} from "@lib/gameEvent/screenChangeEvent";
+import {Screens} from "./screens";
 
 export class PlanetSurface extends GameScreenBase implements GameScreen {
 
@@ -57,6 +60,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     init(): void {
 
 
+        AudioManager.register("rockCrumble",require("../../assets/sound/rockCrumble.wav"));
         AudioManager.register("drilling", require("../../assets/sound/drilling.wav"), true);
         AudioManager.register("dirtStep", require("../../assets/sound/stepDirt.wav"));
         AudioManager.register("error", require("../../assets/sound/error.wav"));
@@ -158,6 +162,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         world.loadMap(worldMap);
     }
 
+
     createTranslationMap() : void {
         let floor: GameEntity = new GameEntityBuilder("floor")
             .addComponent(new FloorComponent())
@@ -175,6 +180,12 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         let rock: GameEntity = new GameEntityBuilder("rock")
             .addComponent(new WallComponent())
+            .addComponent(new WhenDestroyedComponent((): void => {
+                AudioManager.play("rockCrumble");
+
+
+
+            }))
             .addComponent(new CanDamageComponent(new Sprite(0, 0, require("../../assets/images/damageRock.png"))))
             .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/rock.png"))))
             .build();
@@ -197,44 +208,12 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         this.addEntity(4, airLockWarning);
 
-        let airLockDoor: GameEntity = new GameEntityBuilder("airLockDoor")
+        let airLockDoor: GameEntity = new GameEntityBuilder("airLockDoorInterior")
             .addComponent(new WallComponent())
-            .addComponent(new CanInteractComponent(()=>{
-
-                let value: boolean = GlobalState.getState("powerSupplyFunctional");
-
-                if (value == true) {
-                    let enterLabButton: ButtonWidget = new ButtonWidgetBuilder(Renderer.getCanvasWidth() / 2, Renderer.getCanvasHeight() / 2, 180, 25)
-                        .withId("enterScienceLabButton")
-                        .withLabel(new LabelWidgetBuilder(10, 2)
-                            .withLabel("Press <Space> to Enter")
-                            .build())
-                        .withCallBack(() => {
-                            logger(LogType.INFO, "You want to enter")
-                        })
-                        .build()
-
-                    this._widgetManager.register(enterLabButton);
-
-                    this._openButtons.push(enterLabButton);
-                }
+            .addComponent(new CanInteractComponent(() => {
+                GameEventBus.publish(new ScreenChangeEvent(Screens.SCIENCE_LAB))
             }))
-            .addComponent(new CanHaveMessage(() => {
-
-                let value: boolean = GlobalState.getState("powerSupplyFunctional");
-
-                if (value == false) {
-
-                    Renderer.rect((Renderer.getCanvasWidth() / 2) - 10, (Renderer.getCanvasHeight() / 2) - 20, 105, 40, Colors.BLACK())
-
-                    Renderer.print("No Power", Renderer.getCanvasWidth() / 2, Renderer.getCanvasHeight() / 2, {
-                        family: Fonts.Oxanium,
-                        size: 20,
-                        color: Colors.WHITE()
-                    });
-                }
-            }))
-            .addComponent(new OnPowerAnimatedSpriteComponent(new AnimatedSprite(0,0,
+            .addComponent(new AnimatedSpriteComponent(new AnimatedSprite(0,0,
                 [
                     require("../../assets/images/airLockDoorPowered.png"),
                     require("../../assets/images/airLockDoorPowered1.png"),
@@ -256,7 +235,6 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
 
                 ])))
-            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/airLockDoor.png"))))
             .build();
 
         this.addEntity(5, airLockDoor);
@@ -339,9 +317,16 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         AudioManager.play("wind");
         this.createTranslationMap();
         this.createGameMap();
+        this._walkSound = "dirtStep";
+
+        let player : GameEntity = this._gameEntityRegistry.getSingleton("player");
+        this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
+        player.addComponent(new CameraComponent(this._camera));
+        this.createInventory();
     }
 
     onExit(): void {
+        AudioManager.stop("wind");
     }
 
 

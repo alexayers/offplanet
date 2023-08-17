@@ -35,6 +35,7 @@ export class Game extends TeenyTinyTwoDeeApp {
     }
 
 
+
     setupDatabase(): void {
 
         if (this._localStorageDB.doesTableExist("profiles")) {

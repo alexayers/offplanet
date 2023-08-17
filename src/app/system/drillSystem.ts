@@ -95,6 +95,11 @@ export class DrillSystem implements GameSystem {
             if (damage.damage >= 100) {
                 World.getInstance().removeWall(checkMapX, checkMapY);
 
+                if (gameEntity.hasComponent("whenDestroyed")) {
+                    let whenDestroyed : WhenDestroyedComponent = gameEntity.getComponent("whenDestroyed") as WhenDestroyedComponent;
+                    whenDestroyed.callBack();
+                }
+
             }
 
             return;
