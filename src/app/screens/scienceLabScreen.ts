@@ -47,6 +47,8 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
     private _fadeRate : number = 16;
 
 
+
+
     constructor() {
         super();
     }

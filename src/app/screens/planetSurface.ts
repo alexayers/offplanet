@@ -40,6 +40,10 @@ import {MissionRenderSystem} from "../system/missionRenderSystem";
 import {GameEventBus} from "@lib/gameEvent/gameEventBus";
 import {ScreenChangeEvent} from "@lib/gameEvent/screenChangeEvent";
 import {Screens} from "./screens";
+import {SuitComponent} from "../components/suitComponent";
+import {HungerComponent} from "../components/hungerComponent";
+import {StaminaComponent} from "../components/staminaComponent";
+import {HealthComponent} from "../components/healthComponent";
 
 export class PlanetSurface extends GameScreenBase implements GameScreen {
 
@@ -50,6 +54,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     private _alphaFade : number = 1;
     private _fadeTick:number = 0;
     private _fadeRate : number = 16;
+    private _firstEnter: boolean = true;
 
 
     constructor() {
@@ -76,6 +81,10 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this._player = new GameEntityBuilder("player")
             .addComponent(this.createInventory())
             .addComponent(new OxygenComponent(50, 100))
+            .addComponent(new SuitComponent(50, 100))
+            .addComponent(new HungerComponent(50, 100))
+            .addComponent(new StaminaComponent(50, 100))
+            .addComponent(new HealthComponent(50, 100))
             .addComponent(new CameraComponent(this._camera))
             .addComponent(new VelocityComponent(0, 0))
             .build();
@@ -316,8 +325,16 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this.createGameMap();
         this._walkSound = "dirtStep";
 
+
         let player : GameEntity = this._gameEntityRegistry.getSingleton("player");
-        this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
+
+        if (this._firstEnter) {
+            this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
+            this._firstEnter = false;
+        } else {
+            this._camera = new Camera(66.39, 64.99, 0.696, -0.889, 0.66);
+        }
+
         player.addComponent(new CameraComponent(this._camera));
         this.createInventory();
     }
@@ -370,6 +387,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         this.wideScreen();
 
+        this.debug();
     }
 
 

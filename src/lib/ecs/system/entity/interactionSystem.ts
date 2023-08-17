@@ -41,13 +41,13 @@ export class InteractionSystem implements GameSystem {
 
         let gameEntity: GameEntity = this._worldMap.getPosition(checkMapX, checkMapY);
 
-        if (gameEntity.hasComponent("damaged")) {
+        if (gameEntity && gameEntity.hasComponent("damaged")) {
             return true;
         }
 
         gameEntity = this._worldMap.getPosition(checkMapX2, checkMapY2);
 
-        if (gameEntity.hasComponent("damaged")) {
+        if (gameEntity && gameEntity.hasComponent("damaged")) {
             return true;
         }
 
@@ -63,7 +63,7 @@ export class InteractionSystem implements GameSystem {
 
         let gameEntity: GameEntity = this._worldMap.getPosition(checkMapX, checkMapY);
 
-        if (gameEntity.hasComponent("canInteract")) {
+        if (gameEntity && gameEntity.hasComponent("canInteract")) {
             let canInteract: CanInteractComponent = gameEntity.getComponent("canInteract") as CanInteractComponent;
 
             if (canInteract.callBack) {
@@ -99,7 +99,7 @@ export class InteractionSystem implements GameSystem {
 
         let gameEntity: GameEntity = this._worldMap.getPosition(checkMapX, checkMapY);
 
-        if (gameEntity.hasComponent("door") ||
+        if (gameEntity && gameEntity.hasComponent("door") ||
             gameEntity.hasComponent("pushWall") &&
             this._worldMap.getDoorState(checkMapX, checkMapY) == DoorState.CLOSED) { //Open door in front of camera
             this._worldMap.setDoorState(checkMapX, checkMapY, DoorState.OPENING);
@@ -117,7 +117,7 @@ export class InteractionSystem implements GameSystem {
 
         gameEntity = this._worldMap.getPosition(checkMapX, checkMapY);
 
-        if (gameEntity.hasComponent("door") ||
+        if (gameEntity && gameEntity.hasComponent("door") ||
             gameEntity.hasComponent("pushWall") &&
             this._worldMap.getDoorState(checkMapX, checkMapY) == DoorState.OPEN) { //Open door in front of camera
             this._worldMap.setDoorState(checkMapX, checkMapY, DoorState.CLOSING);
@@ -135,7 +135,7 @@ export class InteractionSystem implements GameSystem {
 
         gameEntity = this._worldMap.getPosition(Math.floor(camera.xPos), Math.floor(camera.yPos));
 
-        if (gameEntity.hasComponent("door")) { //Avoid getting stuck in doors
+        if (gameEntity && gameEntity.hasComponent("door")) { //Avoid getting stuck in doors
             this._worldMap.setDoorState(Math.floor(camera.xPos), Math.floor(camera.yPos), DoorState.OPENING);
         }
 
