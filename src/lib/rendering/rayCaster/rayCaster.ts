@@ -213,7 +213,8 @@ export class RayCaster {
             let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
             wallTexture = animatedSprite.animatedSprite.currentSprite();
         } else {
-            throw new Error("No gameEntity found");
+           // throw new Error("No gameEntity found");
+            return;
         }
 
         let texX: number = Math.floor(wallX * wallTexture.image.width);

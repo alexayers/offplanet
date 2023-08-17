@@ -25,17 +25,16 @@ import {InventorySpriteComponent} from "../components/inventorySpriteComponent";
 import {Sprite} from "@lib/rendering/sprite";
 import {HoldingSpriteComponent} from "@lib/ecs/components/holdingSpriteComponent";
 import {RepairComponent} from "../components/repairComponent";
-import {AnimatedSpriteComponent} from "@lib/ecs/components/animatedSpriteComponent";
 import {Renderer} from "@lib/rendering/renderer";
 import {Colors} from "@lib/utils/colorUtils";
 import {Color} from "@lib/primatives/color";
 import {Fonts} from "../fonts";
 import {AudioManager} from "@lib/audio/audioManager";
-import {getRandomBetween} from "@lib/utils/mathUtils";
 import {Timer} from "@lib/utils/timerUtils";
 import {BuildingComponent} from "../components/buildingComponent";
 import {BuildActionComponent} from "@lib/ecs/components/interactions/buildActionComponent";
 import {ConstructionSystem} from "../system/constructionSystem";
+import {logger, LogType} from "@lib/utils/loggerUtils";
 
 
 export class GameScreenBase {
@@ -63,7 +62,6 @@ export class GameScreenBase {
 
     constructor() {
 
-
         this.registerSystems([
             new CameraSystem(),
             new InteractionSystem(),
@@ -72,6 +70,8 @@ export class GameScreenBase {
             new DrillSystem(),
             new ConstructionSystem()
         ]);
+
+        logger(LogType.INFO, "Systems registered")
     }
 
     sway(): void {

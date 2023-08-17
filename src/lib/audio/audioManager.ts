@@ -30,13 +30,24 @@ export class AudioManager {
 
     static play(name: string): void {
         if (this._audioEnabled) {
-            AudioManager._soundMap.get(name).play();
+
+            if (AudioManager._soundMap.has(name)) {
+                AudioManager._soundMap.get(name).play();
+            } else {
+                logger(LogType.ERROR, `Requesting to play sound that hasn't been registered -> ${name}`);
+            }
+
         }
     }
 
+
     static stop(name: string): void {
         if (this._audioEnabled) {
-            AudioManager._soundMap.get(name).stop();
+            if (AudioManager._soundMap.has(name)) {
+                AudioManager._soundMap.get(name).stop();
+            } else {
+                logger(LogType.ERROR, `Requesting to stop sound that hasn't been registered -> ${name}`);
+            }
         }
     }
 

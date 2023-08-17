@@ -26,16 +26,17 @@ export class TeenyTinyTwoDeeApp {
         ConfigurationManager.init(cfg);
         logger(LogType.INFO, "TeenyTinyTwoDeeApp V: 0.0.1");
 
-        document.addEventListener('keydown', (event: KeyboardEvent) => {
+        document.addEventListener('keydown', (event: KeyboardEvent) : void => {
 
             event.preventDefault();
+
 
             GameEventBus.publish(
                 new GameEvent("keyboardDownEvent", event)
             );
         });
 
-        document.addEventListener('keyup', (event: KeyboardEvent) => {
+        document.addEventListener('keyup', (event: KeyboardEvent): void => {
 
             event.preventDefault();
 
@@ -44,20 +45,21 @@ export class TeenyTinyTwoDeeApp {
             );
         });
 
-        document.addEventListener('mousedown', (event: MouseEvent) => {
+        document.addEventListener('mousedown', (event: MouseEvent): void => {
 
             GameEventBus.publish(
                 new GameEvent("mouseDownEvent", event)
             );
         });
 
-        document.addEventListener('mousemove', (event) => {
+        document.addEventListener('mousemove', (event): void => {
+
             GameEventBus.publish(
                 new GameEvent("mouseMoveEvent", event)
             );
         });
 
-        GameEventBus.register("keyboardDownEvent", (gameEvent: GameEvent) => {
+        GameEventBus.register("keyboardDownEvent", (gameEvent: GameEvent): void => {
 
 
             GlobalState.createState(`KEY_${gameEvent.payload.keyCode}`, true);
@@ -66,7 +68,7 @@ export class TeenyTinyTwoDeeApp {
             this._gameScreens.get(this._currentScreen).keyboard(gameEvent.payload.keyCode);
         });
 
-        GameEventBus.register("keyboardUpEvent", (gameEvent: GameEvent) => {
+        GameEventBus.register("keyboardUpEvent", (gameEvent: GameEvent): void => {
 
             GlobalState.createState(`KEY_${gameEvent.payload.keyCode}`, false);
 
@@ -74,7 +76,7 @@ export class TeenyTinyTwoDeeApp {
             this._gameScreens.get(this._currentScreen).keyboard(gameEvent.payload.keyCode);
         });
 
-        GameEventBus.register("mouseMoveEvent", (gameEvent: GameEvent) => {
+        GameEventBus.register("mouseMoveEvent", (gameEvent: GameEvent): void => {
 
             Mouse.x = gameEvent.payload.x;
             Mouse.y = gameEvent.payload.y;
@@ -82,7 +84,7 @@ export class TeenyTinyTwoDeeApp {
             this._gameScreens.get(this._currentScreen).mouseMove(gameEvent.payload.x, gameEvent.payload.y);
         });
 
-        GameEventBus.register("mouseDownEvent", (gameEvent: GameEvent) => {
+        GameEventBus.register("mouseDownEvent", (gameEvent: GameEvent): void => {
 
             let mouseButton: MouseButton;
 

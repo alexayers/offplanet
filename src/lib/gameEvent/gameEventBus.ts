@@ -7,8 +7,10 @@ export class GameEventBus {
 
     public static register(channel: string, eventHandler: Function): void {
         if (!this._channels.has(channel)) {
-            logger(LogType.INFO, "Creating new channel ->" + channel);
+            logger(LogType.INFO, `Creating new channel -> ${channel}`);
             this._channels.set(channel, []);
+        } else {
+            logger(LogType.INFO, `Registering new listener to existing channel -> ${channel}`)
         }
 
         this._channels.get(channel).push(eventHandler);
@@ -23,7 +25,8 @@ export class GameEventBus {
                 try {
                     listener(gameEvent);
                 } catch (e) {
-                    logger(LogType.ERROR, "Incorrectly defined handler.");
+                    logger(LogType.ERROR, `Incorrectly defined handler-> ${JSON.stringify(gameEvent)}`);
+                    console.log(e);
                 }
             }
         } else {

@@ -24,7 +24,6 @@ export class Game extends TeenyTinyTwoDeeApp {
             ticksPerMinute: 240
         })
 
-
         const gameScreens: Map<string, GameScreen> = new Map<string, GameScreen>();
 
         gameScreens.set(Screens.MAIN_MENU, new MainMenuScreen());
@@ -32,7 +31,7 @@ export class Game extends TeenyTinyTwoDeeApp {
         gameScreens.set(Screens.PLANET_SURFACE, new PlanetSurface());
         gameScreens.set(Screens.SCIENCE_LAB, new ScienceLabScreen())
 
-        this.run(gameScreens, Screens.SCIENCE_LAB);
+        this.run(gameScreens, Screens.PLANET_SURFACE);
     }
 
 
@@ -44,6 +43,7 @@ export class Game extends TeenyTinyTwoDeeApp {
         }
 
     }
+
 
 }
 

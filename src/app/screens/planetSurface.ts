@@ -63,10 +63,9 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         AudioManager.register("wind", require("../../assets/sound/wind.wav"), true);
         AudioManager.register("generatorRunning", require("../../assets/sound/generatorRunning.wav"), true);
 
-        GlobalState.createState("powerSupplyFunctional", false);
+        //GlobalState.createState("powerSupplyFunctional", false);
 
-        this.createTranslationMap();
-        this.createGameMap();
+
 
         this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
 
@@ -87,7 +86,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this._postRenderSystems.push(new HelmetRenderSystem());
         this._postRenderSystems.push(new MissionRenderSystem());
 
-        this.powerGeneration();
+    //    this.powerGeneration();
     }
 
 
@@ -338,6 +337,8 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
     onEnter(): void {
         AudioManager.play("wind");
+        this.createTranslationMap();
+        this.createGameMap();
     }
 
     onExit(): void {
