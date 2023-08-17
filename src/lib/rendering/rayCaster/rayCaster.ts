@@ -206,14 +206,14 @@ export class RayCaster {
         let sprite: SpriteComponent;
         let wallTexture: Sprite;
 
-        if (gameEntity.hasComponent("sprite")) {
+        if (gameEntity && gameEntity.hasComponent("sprite")) {
             sprite = gameEntity.getComponent("sprite") as SpriteComponent
             wallTexture = sprite.sprite;
-        } else if (gameEntity.hasComponent("animatedSprite")) {
+        } else if (gameEntity && gameEntity.hasComponent("animatedSprite")) {
             let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
             wallTexture = animatedSprite.animatedSprite.currentSprite();
         } else {
-            console.log(gameEntity)
+            throw new Error("No gameEntity found");
         }
 
         let texX: number = Math.floor(wallX * wallTexture.image.width);
@@ -222,6 +222,7 @@ export class RayCaster {
         } else if (side == 1 && rayDirY < 0) {
             texX = wallTexture.image.width - texX - 1;
         }
+
 
         Renderer.renderClippedImage(wallTexture.image, texX, 0, 1, wallTexture.image.height, x, drawStart, 1, lineHeight);
 

@@ -33,7 +33,6 @@ export class Game extends TeenyTinyTwoDeeApp {
         gameScreens.set(Screens.SCIENCE_LAB, new ScienceLabScreen())
 
         this.run(gameScreens, Screens.SCIENCE_LAB);
-
     }
 
 

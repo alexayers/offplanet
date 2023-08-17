@@ -270,8 +270,8 @@ export class GameScreenBase {
 
         inventory.addItem(drill);
         inventory.addItem(wrench);
-        inventory.addItem(hammer);
-        inventory.addItem(building);
+     //   inventory.addItem(hammer);
+     //   inventory.addItem(building);
 
 
         return inventory;
@@ -351,6 +351,14 @@ export class GameScreenBase {
 
         gameSystems.forEach((gameSystem: GameSystem) : void => {
             this._gameSystems.push(gameSystem);
+        })
+
+    }
+
+    registerRenderSystems(gameRenderSystem: Array<GameRenderSystem>): void {
+
+        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem) : void => {
+            this._renderSystems.push(gameRenderSystem);
         })
 
     }

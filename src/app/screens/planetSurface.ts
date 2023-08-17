@@ -200,7 +200,6 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         let airLockDoor: GameEntity = new GameEntityBuilder("airLockDoor")
             .addComponent(new WallComponent())
-            .addComponent(new OnPowerLossSpriteComponent(new Sprite(128, 128, require("../../assets/images/airLockDoor.png"))))
             .addComponent(new CanInteractComponent(()=>{
 
                 let value: boolean = GlobalState.getState("powerSupplyFunctional");

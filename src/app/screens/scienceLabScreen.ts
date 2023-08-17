@@ -33,9 +33,18 @@ import {AnimatedSprite} from "@lib/rendering/animatedSprite";
 import {CanDamageComponent} from "@lib/ecs/components/canDamageComponent";
 import {BuildingRenderSystem} from "../system/buildingRenderSystem";
 import {TransparentComponent} from "@lib/ecs/components/transparentComponent";
+import {DoorComponent} from "@lib/ecs/components/doorComponent";
+import {DustRenderSystem} from "../system/dustRenderSystem";
+import {AirLockParticleRender} from "../system/airLockParticleRender";
 
 
 export class ScienceLabScreen extends GameScreenBase implements GameScreen {
+
+    private _mapBuilder: Map<string, Array<GameEntity>> = new Map<string, Array<GameEntity>>();
+
+    private _alphaFade : number = 1;
+    private _fadeTick:number = 0;
+    private _fadeRate : number = 16;
 
     init(): void {
 
@@ -43,17 +52,24 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
         this.createGameMap();
         this.createPlayer();
 
-        this._renderSystems.push(
-            new RayCastRenderSystem()
-        );
+        this.registerRenderSystems([
+            new RayCastRenderSystem(),
+            new DustRenderSystem(),
+            new AirLockParticleRender()
+        ]);
+
 
         this._postRenderSystems.push(new HelmetRenderSystem());
         this._postRenderSystems.push(new MissionRenderSystem());
         this._postRenderSystems.push(new BuildingRenderSystem());
-
+        GlobalState.updateState("powerSupplyFunctional", true);
 
         this.powerGeneration();
+
+
+
     }
+
 
     powerGeneration() : void {
         GlobalState.registerChangeListener("powerSupplyFunctional", ()=> {
@@ -100,22 +116,8 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
         let width: number = 20;
         let height: number = 20;
 
-        /*
-        for (let y: number = 0; y < height; y++) {
-            for (let x: number = 0; x < width; x++) {
-                if (y == 0 || y == height - 1 || x == 0 || x == width - 1) {
-                    grid.push(1);
-                } else {
-                    grid.push(0);
-                }
-            }
-        }
 
-         */
-
-        grid = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,1,2,0,0,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,1,2,0,0,1,1,1,1,2,1,2,1,1,1,1,1,1,2,2,2,2,2,0,0,2,1,2,2,2,1,2,2,2,1,2,2,2,2,1,1,1,2,0,0,1,1,1,1,2,1,2,1,1,1,1,1,1,2,1,1,1,2,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,2,0,0,2,2,1,2,2,2,2,1,2,2,2,1,1,2,2,1,2,2,0,0,2,2,1,2,2,2,2,1,2,2,2,1,1,1,1,1,1,1,0,0,2,2,1,2,2,2,2,1,2,2,2,2,2,2,2,1,2,2,0,0,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,0,0,2,1,1,1,2,2,1,2,2,1,2,1,1,1,2,1,1,1,0,0,2,1,1,1,2,1,1,1,2,1,2,1,1,1,2,1,1,1,0,0,2,2,1,2,2,1,1,1,2,1,2,2,1,2,2,2,1,2,0,0,1,1,1,1,2,1,1,1,2,1,2,2,1,2,2,2,1,2,0,0,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
-
+        grid =[1,1,1,1,1,1,21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,16,16,16,16,4,0,4,11,0,0,6,0,0,0,0,0,0,0,1,1,16,0,0,13,4,0,4,12,0,0,3,0,15,15,15,15,15,15,1,1,16,0,16,16,4,0,4,11,0,0,2,15,2,8,8,8,8,8,1,1,2,3,2,6,4,22,4,2,2,3,2,2,2,8,0,0,0,8,1,1,0,0,0,0,5,0,5,0,0,0,0,0,0,8,0,0,0,8,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,8,1,1,14,2,3,2,14,6,2,0,2,6,2,0,0,8,8,20,8,8,1,1,10,10,0,10,10,2,2,3,2,2,2,0,0,0,0,0,0,0,1,1,10,0,0,0,10,2,0,0,2,2,2,2,6,2,2,3,2,2,1,1,10,0,0,0,10,2,0,0,0,0,0,0,0,0,0,0,0,0,1,1,10,10,10,10,10,2,0,0,0,0,2,2,6,14,2,2,6,2,1,1,17,18,17,2,2,2,2,2,2,0,2,7,7,7,7,7,7,2,1,1,0,0,17,9,9,9,9,9,2,0,2,7,0,0,0,0,7,2,1,1,17,19,17,9,0,0,0,9,2,19,2,7,7,7,0,7,7,2,1,1,0,0,17,9,0,0,0,9,17,0,17,17,18,17,19,17,17,17,1,1,0,0,18,9,9,0,9,9,17,0,0,0,0,0,0,0,0,0,1,1,0,0,17,17,17,19,17,17,17,18,17,17,14,17,19,17,14,17,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,17,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
 
 
@@ -128,43 +130,8 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
 
         let airLockDoor: GameEntity = new GameEntityBuilder("airLockDoor")
             .addComponent(new WallComponent())
-            .addComponent(new OnPowerLossSpriteComponent(new Sprite(128, 128, require("../../assets/images/airLockDoor.png"))))
-            .addComponent(new CanInteractComponent(()=>{
-
-                let value: boolean = GlobalState.getState("powerSupplyFunctional");
-
-                if (value == true) {
-                    let enterLabButton: ButtonWidget = new ButtonWidgetBuilder(Renderer.getCanvasWidth() / 2, Renderer.getCanvasHeight() / 2, 180, 25)
-                        .withId("enterScienceLabButton")
-                        .withLabel(new LabelWidgetBuilder(10, 2)
-                            .withLabel("Press <Space> to Enter")
-                            .build())
-                        .withCallBack(() => {
-                            logger(LogType.INFO, "You want to enter")
-                        })
-                        .build()
-
-                    this._widgetManager.register(enterLabButton);
-
-                    this._openButtons.push(enterLabButton);
-                }
-            }))
-            .addComponent(new CanHaveMessage(() => {
-
-                let value: boolean = GlobalState.getState("powerSupplyFunctional");
-
-                if (value == false) {
-
-                    Renderer.rect((Renderer.getCanvasWidth() / 2) - 10, (Renderer.getCanvasHeight() / 2) - 20, 105, 40, Colors.BLACK())
-
-                    Renderer.print("No Power", Renderer.getCanvasWidth() / 2, Renderer.getCanvasHeight() / 2, {
-                        family: Fonts.Oxanium,
-                        size: 20,
-                        color: Colors.WHITE()
-                    });
-                }
-            }))
-            .addComponent(new OnPowerAnimatedSpriteComponent(new AnimatedSprite(0,0,
+            .addComponent(new DoorComponent())
+            .addComponent(new AnimatedSpriteComponent(new AnimatedSprite(0,0,
                 [
                     require("../../assets/images/airLockDoorPowered.png"),
                     require("../../assets/images/airLockDoorPowered1.png"),
@@ -183,18 +150,23 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
                     require("../../assets/images/airLockDoorPowered3.png"),
                     require("../../assets/images/airLockDoorPowered2.png"),
                     require("../../assets/images/airLockDoorPowered1.png")
-
-
                 ])))
-            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/airLockDoor.png"))))
             .build();
 
-        this.addEntity(600, airLockDoor);
 
-        let pos =6;
-        grid[pos] = 600;
+        this.addEntity(21, airLockDoor);
 
-        grid[6 + (5 * 20)] = 700;
+
+        let labDoor : GameEntity = new GameEntityBuilder("labDoor")
+            .addComponent(new DoorComponent())
+            .addComponent(new SpriteComponent(new Sprite(0,0, require("../../assets/images/labDoor.png"))))
+            .build();
+
+        this.addEntity(3, labDoor);
+
+
+
+
 
 
 
@@ -218,38 +190,165 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
             .addComponent(new FloorComponent())
             .build();
 
-        this.addEntity( 1, floor);
+        this.addEntity( 0, floor);
 
         let wall: GameEntity = new GameEntityBuilder("wall")
             .addComponent(new WallComponent())
             .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/spaceStationWall.png"))))
             .build();
 
-        this.addEntity(0, wall);
+        this.addEntity(1, wall);
 
-        let stationWall: GameEntity = new GameEntityBuilder("stationWall")
+        let airLock: GameEntity = new GameEntityBuilder("airLock")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/airLock.png"))))
+            .build();
+
+        this.addEntity(4, airLock);
+
+        let airLockWarning: GameEntity = new GameEntityBuilder("airLockWarning")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/airLockWarning.png"))))
+            .build();
+
+        this.addEntity(5, airLockWarning);
+
+        let airFilter: GameEntity = new GameEntityBuilder("airFilter")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/airFilter.png"))))
+            .build();
+
+        this.addEntity(6, airFilter);
+
+        let workShopWall: GameEntity = new GameEntityBuilder("workShopWall")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/workShopWall.png"))))
+            .build();
+
+        this.addEntity(7, workShopWall);
+
+        let freezerWall: GameEntity = new GameEntityBuilder("freezerWall")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/freezerWall.png"))))
+            .build();
+
+        this.addEntity(8, freezerWall);
+
+        let generatorWall: GameEntity = new GameEntityBuilder("generatorWall")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/generatorWall.png"))))
+            .build();
+
+        this.addEntity(9, generatorWall);
+
+        let dataCenterWall: GameEntity = new GameEntityBuilder("dataCenterWall")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/dataCenterWall.png"))))
+            .build();
+
+        this.addEntity(10, dataCenterWall);
+
+        let kitchenCabinet: GameEntity = new GameEntityBuilder("kitchenCabinet")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/kitchenCabinet.png"))))
+            .build();
+
+        this.addEntity(11, kitchenCabinet);
+
+        let kitchenOven: GameEntity = new GameEntityBuilder("kitchenOven")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/kitchenOven.png"))))
+            .build();
+
+        this.addEntity(12, kitchenOven);
+
+        let bed: GameEntity = new GameEntityBuilder("bed")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/bed.png"))))
+            .build();
+
+        this.addEntity(13, bed);
+
+        let glass: GameEntity = new GameEntityBuilder("glass")
+            .addComponent(new WallComponent())
+            .addComponent(new TransparentComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/glass.png"))))
+            .build();
+
+        this.addEntity(14, glass);
+
+        let plants: GameEntity = new GameEntityBuilder("plants")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/plants.png"))))
+            .build();
+
+        this.addEntity(15, plants);
+
+        let bedRoom: GameEntity = new GameEntityBuilder("bedRoom")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/bedRoom.png"))))
+            .build();
+
+        this.addEntity(16, bedRoom);
+
+        let backRoom: GameEntity = new GameEntityBuilder("backRoom")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/backRoom.png"))))
+            .build();
+
+        this.addEntity(17, backRoom);
+
+        let backRoomFilter: GameEntity = new GameEntityBuilder("backRoomFilter")
+            .addComponent(new WallComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/backRoomFilter.png"))))
+            .build();
+
+        this.addEntity(18, backRoomFilter);
+
+        let backRoomDoor: GameEntity = new GameEntityBuilder("backRoomDoor")
+            .addComponent(new WallComponent())
+            .addComponent(new DoorComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/backRoomDoor.png"))))
+            .build();
+
+        this.addEntity(19, backRoomDoor);
+
+        let freezerDoor: GameEntity = new GameEntityBuilder("freezerDoor")
+            .addComponent(new WallComponent())
+            .addComponent(new DoorComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/freezerDoor.png"))))
+            .build();
+
+        this.addEntity(20, freezerDoor);
+
+        let innerAirLock: GameEntity = new GameEntityBuilder("innerAirLock")
+            .addComponent(new WallComponent())
+            .addComponent(new DoorComponent())
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/innerAirLock.png"))))
+            .build();
+
+        this.addEntity(22, innerAirLock);
+
+        let innerLabWall: GameEntity = new GameEntityBuilder("innerLabWall")
             .addComponent(new WallComponent())
 
             .addComponent(new CanDamageComponent(new Sprite(0, 0, require("../../assets/images/damageRock.png"))))
-            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/stationWall.png"))))
+            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/innerLabWall.png"))))
             .build();
 
-        this.addEntity(2, stationWall);
+        this.addEntity(2, innerLabWall);
 
 
 
-        let trans: GameEntity = new GameEntityBuilder("trans")
-            .addComponent(new WallComponent())
-            .addComponent(new TransparentComponent(0.25))
-            .addComponent(new SpriteComponent(new Sprite(128, 128, require("../../assets/images/spaceStationWall.png"))))
-            .build();
 
-        this.addEntity(700, trans);
+
 
     }
 
     onEnter(): void {
+        GlobalState.updateState("powerSupplyFunctional", true);
     }
+
 
     onExit(): void {
     }
@@ -277,9 +376,25 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
             renderSystem.process();
         });
 
+        this.title();
+
         this.wideScreen();
 
         this.debug();
+    }
+
+    title() : void {
+        if (this._alphaFade > 0.1) {
+
+            this._fadeTick++;
+
+            if (this._fadeTick == this._fadeRate) {
+                this._fadeTick = 0;
+                this._alphaFade -= 0.09;
+            }
+
+            Renderer.print("Research Lab", 50, 250, {family: Fonts.OxaniumBold, size: 100, color: new Color(255,255,255, this._alphaFade)})
+        }
     }
 
 }
