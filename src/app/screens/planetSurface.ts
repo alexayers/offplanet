@@ -262,11 +262,8 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
             .addComponent(new WallComponent())
             .addComponent(new CanInteractComponent())
             .addComponent(new CanDamageComponent(new Sprite(0, 0, require("../../assets/images/damagedGenerator.png"))))
-            .addComponent(new WhenDestroyedComponent(() : void => {
-                GlobalState.updateState("powerSupplyFunctional", false);
-            }))
             .addComponent(new WhenRepairedComponent((): void => {
-                GlobalState.updateState("powerSupplyFunctional", true);
+             //   GlobalState.updateState("powerSupplyFunctional", true);
                 AudioManager.play("generatorRunning");
                 logger(LogType.INFO, "Power restored");
             }))
