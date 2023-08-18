@@ -35,6 +35,8 @@ import {BuildingComponent} from "../components/buildingComponent";
 import {BuildActionComponent} from "@lib/ecs/components/interactions/buildActionComponent";
 import {ConstructionSystem} from "../system/constructionSystem";
 import {logger, LogType} from "@lib/utils/loggerUtils";
+import {SuitSystem} from "../system/suitSystem";
+import {HealthSystem} from "../system/healthSystem";
 
 
 export class GameScreenBase {
@@ -69,7 +71,9 @@ export class GameScreenBase {
             new PickUpDropSystem(),
             new RepairSystem(),
             new DrillSystem(),
-            new ConstructionSystem()
+            new ConstructionSystem(),
+            new SuitSystem(),
+            new HealthSystem()
         ]);
 
         AudioManager.register("drill", require("../../assets/sound/drill.wav"));
@@ -364,7 +368,13 @@ export class GameScreenBase {
         gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem) : void => {
             this._renderSystems.push(gameRenderSystem);
         })
+    }
 
+    registerPostRenderSystems(gameRenderSystem: Array<GameRenderSystem>): void {
+
+        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem) : void => {
+            this._postRenderSystems.push(gameRenderSystem);
+        })
     }
 
 }

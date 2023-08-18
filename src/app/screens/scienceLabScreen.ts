@@ -67,13 +67,12 @@ export class ScienceLabScreen extends GameScreenBase implements GameScreen {
             new AirLockParticleRender()
         ]);
 
+        this.registerPostRenderSystems([
+            new HelmetRenderSystem(),
+            new BuildingRenderSystem()
+        ]);
 
-        this._postRenderSystems.push(new HelmetRenderSystem());
-    //    this._postRenderSystems.push(new MissionRenderSystem());
-        this._postRenderSystems.push(new BuildingRenderSystem());
-    //    GlobalState.updateState("powerSupplyFunctional", true);
 
-    //    this.powerGeneration();
 
 
         logger(LogType.INFO, "ScienceLab Initialized");

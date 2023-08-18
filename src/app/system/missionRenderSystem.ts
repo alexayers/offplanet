@@ -3,11 +3,23 @@ import {Renderer} from "@lib/rendering/renderer";
 import {Fonts} from "../fonts";
 import {Color} from "@lib/primatives/color";
 import {GlobalState} from "@lib/application/globalState";
+import {GameEntity} from "@lib/ecs/gameEntity";
+import {GameEntityRegistry} from "@lib/registries/gameEntityRegistry";
 
 
 export class MissionRenderSystem implements GameRenderSystem {
 
+    private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     process(): void {
+
+        let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
+
+
+        if (player.hasComponent("dead")) {
+            return;
+        }
+
+
 
 
         Renderer.print(`Station Status`, 15, 70, {

@@ -1,4 +1,4 @@
-import {GameSystem} from "@lib/ecs/gameSystem";
+import {GameSystem, processComponents} from "@lib/ecs/gameSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
 import {InventoryComponent} from "@lib/ecs/components/inventoryComponent";
@@ -15,22 +15,20 @@ export class DrillSystem implements GameSystem {
     private _world: World = World.getInstance();
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
 
+    @processComponents(["camera", "drilling"], ["drilling"])
     processEntity(gameEntity: GameEntity): void {
 
-        if (gameEntity.hasComponent("camera") && gameEntity.hasComponent("drilling")) {
+        let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
+        let inventory: InventoryComponent = gameEntity.getComponent("inventory") as InventoryComponent;
+        let holdingItem: GameEntity = inventory.getCurrentItem();
 
-            let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
-            let inventory: InventoryComponent = gameEntity.getComponent("inventory") as InventoryComponent;
-            let holdingItem: GameEntity = inventory.getCurrentItem();
-            gameEntity.removeComponent("drilling");
+        if (holdingItem && holdingItem.hasComponent("drill")) {
 
-            if (holdingItem && holdingItem.hasComponent("drill")) {
-
-                if (this.canDamage(camera)) {
-                    this.damageObject(camera, holdingItem);
-                }
+            if (this.canDamage(camera)) {
+                this.damageObject(camera, holdingItem);
             }
         }
+
 
     }
 
@@ -96,7 +94,7 @@ export class DrillSystem implements GameSystem {
                 World.getInstance().removeWall(checkMapX, checkMapY);
 
                 if (gameEntity.hasComponent("whenDestroyed")) {
-                    let whenDestroyed : WhenDestroyedComponent = gameEntity.getComponent("whenDestroyed") as WhenDestroyedComponent;
+                    let whenDestroyed: WhenDestroyedComponent = gameEntity.getComponent("whenDestroyed") as WhenDestroyedComponent;
                     whenDestroyed.callBack();
                 }
 
@@ -116,7 +114,7 @@ export class DrillSystem implements GameSystem {
                 World.getInstance().removeWall(checkMapX, checkMapY);
 
                 if (gameEntity.hasComponent("whenDestroyed")) {
-                    let whenDestroyed : WhenDestroyedComponent = gameEntity.getComponent("whenDestroyed") as WhenDestroyedComponent;
+                    let whenDestroyed: WhenDestroyedComponent = gameEntity.getComponent("whenDestroyed") as WhenDestroyedComponent;
                     whenDestroyed.callBack();
                 }
 

@@ -1,4 +1,4 @@
-import {GameSystem} from "@lib/ecs/gameSystem";
+import {GameSystem, processComponents} from "@lib/ecs/gameSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
 import {World} from "@lib/rendering/rayCaster/world";
@@ -10,17 +10,16 @@ export class ConstructionSystem implements GameSystem {
     private _world: World = World.getInstance();
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
 
+    @processComponents(["camera","buildAction"],["buildAction"])
     processEntity(gameEntity: GameEntity): void {
 
-        if (gameEntity.hasComponent("camera") && gameEntity.hasComponent("buildAction")) {
-            gameEntity.removeComponent("buildAction");
             let camera : CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
 
             if (this.isEmpty(camera)) {
                 this.placeWall(camera);
             }
 
-        }
+
     }
 
     placeWall(camera: CameraComponent): void {

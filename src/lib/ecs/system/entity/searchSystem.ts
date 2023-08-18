@@ -1,4 +1,4 @@
-import {GameSystem} from "@lib/ecs/gameSystem";
+import {GameSystem, processComponents} from "@lib/ecs/gameSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {World} from "@lib/rendering/rayCaster/world";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
@@ -10,19 +10,15 @@ export class SearchSystem implements GameSystem {
 
     private _worldMap: World = World.getInstance();
 
+    @processComponents(["camera", "search"], ["search"])
     processEntity(gameEntity: GameEntity): void {
 
-        if (gameEntity.hasComponent("camera") && gameEntity.hasComponent("search")) {
 
-            let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
-            let searching: InventoryComponent = this.searchObject(camera);
+        let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
+        let searching: InventoryComponent = this.searchObject(camera);
 
-            if (searching != null) {
-                gameEntity.addComponent(new SearchingComponent(searching));
-            }
-
-
-            gameEntity.removeComponent("search");
+        if (searching != null) {
+            gameEntity.addComponent(new SearchingComponent(searching));
         }
 
     }

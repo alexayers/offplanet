@@ -1,4 +1,4 @@
-import {GameSystem} from "@lib/ecs/gameSystem";
+import {GameSystem, processComponents} from "@lib/ecs/gameSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
 import {World} from "@lib/rendering/rayCaster/world";
@@ -12,9 +12,8 @@ export class RepairSystem implements GameSystem {
 
     private _world: World = World.getInstance();
 
+    @processComponents(["camera","interacting"])
     processEntity(gameEntity: GameEntity): void {
-
-        if (gameEntity.hasComponent("camera") && gameEntity.hasComponent("interacting")) {
 
             let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
             let inventory: InventoryComponent = gameEntity.getComponent("inventory") as InventoryComponent;
@@ -27,7 +26,7 @@ export class RepairSystem implements GameSystem {
                     this.repairObject(camera, holdingItem);
                 }
             }
-        }
+
 
     }
 

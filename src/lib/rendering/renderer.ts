@@ -39,6 +39,9 @@ export class Renderer {
         this._dataContext = this._dataCanvas.getContext("2d");
     }
 
+    static getContext() : CanvasRenderingContext2D  {
+        return Renderer._ctx;
+    }
 
     static getImageData(image: HTMLImageElement): Uint8ClampedArray {
 

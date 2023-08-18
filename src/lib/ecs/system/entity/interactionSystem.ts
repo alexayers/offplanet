@@ -1,4 +1,4 @@
-import {GameSystem} from "@lib/ecs/gameSystem";
+import {GameSystem, processComponents} from "@lib/ecs/gameSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {DoorState, World} from "@lib/rendering/rayCaster/world";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
@@ -10,24 +10,23 @@ export class InteractionSystem implements GameSystem {
 
     private _worldMap: World = World.getInstance();
 
+
+    @processComponents(["camera", "interacting"])
     processEntity(gameEntity: GameEntity): void {
 
-        if (gameEntity.hasComponent("camera") && gameEntity.hasComponent("interacting")) {
+        let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
+        let interaction: CanInteractComponent = gameEntity.getComponent("interacting") as CanInteractComponent;
 
-            let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
-            let interaction: CanInteractComponent = gameEntity.getComponent("interacting") as CanInteractComponent;
-
-            if (!this.isDamaged(camera)) {
-                if (!this.interactDoor(camera.camera)) {
-                    this.interactObject(camera);
-                }
-
-                gameEntity.removeComponent("interacting");
-            } else {
-                console.log("damgedd");
+        if (!this.isDamaged(camera)) {
+            if (!this.interactDoor(camera.camera)) {
+                this.interactObject(camera);
             }
 
+            gameEntity.removeComponent("interacting");
+        } else {
+            console.log("damgedd");
         }
+
 
     }
 

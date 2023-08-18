@@ -44,6 +44,7 @@ import {SuitComponent} from "../components/suitComponent";
 import {HungerComponent} from "../components/hungerComponent";
 import {StaminaComponent} from "../components/staminaComponent";
 import {HealthComponent} from "../components/healthComponent";
+import {DeathRenderSystem} from "../system/deathRenderSystem";
 
 export class PlanetSurface extends GameScreenBase implements GameScreen {
 
@@ -81,7 +82,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this._player = new GameEntityBuilder("player")
             .addComponent(this.createInventory())
             .addComponent(new OxygenComponent(50, 100))
-            .addComponent(new SuitComponent(50, 100))
+            .addComponent(new SuitComponent(0, 100))
             .addComponent(new HungerComponent(50, 100))
             .addComponent(new StaminaComponent(50, 100))
             .addComponent(new HealthComponent(50, 100))
@@ -91,13 +92,22 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         this._gameEntityRegistry.registerSingleton(this._player);
 
-        this._renderSystems.push(
-            new RayCastRenderSystem()
-        );
 
-        this._postRenderSystems.push(new StormRenderSystem());
-        this._postRenderSystems.push(new HelmetRenderSystem());
-        this._postRenderSystems.push(new MissionRenderSystem());
+        this.registerRenderSystems([
+            new RayCastRenderSystem()
+            ]);
+
+        this.registerPostRenderSystems([
+            new StormRenderSystem(),
+            new HelmetRenderSystem(),
+            new MissionRenderSystem(),
+
+
+
+            new DeathRenderSystem()
+        ])
+
+
 
     //    this.powerGeneration();
     }

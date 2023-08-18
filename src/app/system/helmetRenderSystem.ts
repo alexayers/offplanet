@@ -27,6 +27,11 @@ export class HelmetRenderSystem implements GameRenderSystem {
     process(): void {
 
         let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
+
+        if (player.hasComponent("dead")) {
+            return;
+        }
+
         let camera: CameraComponent = player.getComponent("camera") as CameraComponent;
 
         this.renderDamaged(camera);
