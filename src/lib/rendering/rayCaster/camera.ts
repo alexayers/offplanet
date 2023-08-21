@@ -33,7 +33,7 @@ export class Camera {
         let gameEntity: GameEntity = worldMap.getPosition(Math.floor(this._xPos + moveX), Math.floor(this._yPos));
 
         if (!gameEntity) {
-            logger(LogType.ERROR,`Undefined object found at position x:${Math.floor(this._xPos + moveX)} y:${Math.floor(this._yPos)}`)
+            logger(LogType.ERROR, `Undefined object found at position x:${Math.floor(this._xPos + moveX)} y:${Math.floor(this._yPos)}`)
             return;
         }
 

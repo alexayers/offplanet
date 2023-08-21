@@ -26,7 +26,7 @@ export class TeenyTinyTwoDeeApp {
         ConfigurationManager.init(cfg);
         logger(LogType.INFO, "TeenyTinyTwoDeeApp V: 0.0.1");
 
-        document.addEventListener('keydown', (event: KeyboardEvent) : void => {
+        document.addEventListener('keydown', (event: KeyboardEvent): void => {
 
             event.preventDefault();
 

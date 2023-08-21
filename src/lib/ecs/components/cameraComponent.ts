@@ -27,12 +27,12 @@ export class CameraComponent implements GameComponent {
         return this._camera.yPlane;
     }
 
-    set yPlane(value : number) {
-        this._camera.yPlane =value;
+    set yPlane(value: number) {
+        this._camera.yPlane = value;
     }
 
-    set xPlane(value : number) {
-        this._camera.xPlane =value;
+    set xPlane(value: number) {
+        this._camera.xPlane = value;
     }
 
 

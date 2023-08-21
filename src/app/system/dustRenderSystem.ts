@@ -28,7 +28,7 @@ export class DustRenderSystem implements GameRenderSystem {
         particle.height = getRandomBetween(5, 7);
         particle.color = new Color(120, 120, 120, getRandomBetween(1, 100) / 1000);
         particle.lifeSpan = getRandomBetween(80, 100);
-        particle.velX = (getRandomBetween(1, 7) / 100) *-1;
+        particle.velX = (getRandomBetween(1, 7) / 100) * -1;
         particle.velY = (getRandomBetween(1, 7) / 100) * -1;
         particle.decayRate = getRandomBetween(1, 5);
 

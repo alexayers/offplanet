@@ -4,11 +4,9 @@ import {getRandomBetween} from "@lib/utils/mathUtils";
 import {Color} from "@lib/primatives/color";
 import {Renderer} from "@lib/rendering/renderer";
 
-
 export class StormRenderSystem implements GameRenderSystem {
 
     private _particles: Array<Particle> = [];
-
 
     constructor() {
 

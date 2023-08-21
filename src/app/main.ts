@@ -33,9 +33,8 @@ export class Game extends TeenyTinyTwoDeeApp {
         gameScreens.set(Screens.SCIENCE_LAB, new ScienceLabScreen());
         gameScreens.set(Screens.TEST, new TestScreen());
 
-        this.run(gameScreens, Screens.MAIN_MENU);
+        this.run(gameScreens, Screens.PLANET_SURFACE);
     }
-
 
 
     setupDatabase(): void {

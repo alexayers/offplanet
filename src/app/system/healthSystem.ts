@@ -8,11 +8,11 @@ import {DeadComponent} from "@lib/ecs/components/deadComponent";
 export class HealthSystem implements GameSystem {
 
 
-    @processComponents(["health","damage"],["damage"])
+    @processComponents(["health", "damage"], ["damage"])
     processEntity(gameEntity: GameEntity): void {
 
-        let health : HealthComponent = gameEntity.getComponent("health") as HealthComponent;
-        let damage : DamageComponent = gameEntity.getComponent("damage") as DamageComponent;
+        let health: HealthComponent = gameEntity.getComponent("health") as HealthComponent;
+        let damage: DamageComponent = gameEntity.getComponent("damage") as DamageComponent;
 
         health.current -= damage.amount;
 
@@ -23,7 +23,6 @@ export class HealthSystem implements GameSystem {
         }
 
     }
-
 
 
 }

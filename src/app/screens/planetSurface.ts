@@ -21,22 +21,17 @@ import {getRandomBetween} from "@lib/utils/mathUtils";
 import {StormRenderSystem} from "../system/stormRenderSystem";
 import {CanInteractComponent} from "@lib/ecs/components/canInteractComponent";
 import {AnimatedSprite} from "@lib/rendering/animatedSprite";
-import {WindowWidget} from "@lib/ui/windowWidget";
-import {LabelWidgetBuilder} from "@lib/ui/labelWidget";
 import {DamagedComponent} from "@lib/ecs/components/damagedComponent";
 import {CanDamageComponent} from "@lib/ecs/components/canDamageComponent";
 import {OxygenComponent} from "../components/oxygenComponent";
 import {HelmetRenderSystem} from "../system/helmetRenderSystem";
 import {WhenRepairedComponent} from "../components/whenRepairedComponent";
 import {logger, LogType} from "@lib/utils/loggerUtils";
-import {CanHaveMessage} from "../components/canHaveMessage";
-import {ButtonWidget, ButtonWidgetBuilder} from "@lib/ui/buttonWidget";
 import {OnPowerAnimatedSpriteComponent} from "../components/onPowerAnimatedSpriteComponent";
 import {WhenDestroyedComponent} from "../components/whenDestroyedComponent";
 import {OnPowerLossSpriteComponent} from "../components/onPowerLossSpriteComponent";
 import {AudioManager} from "@lib/audio/audioManager";
 import {GameRenderSystem} from "@lib/ecs/gameRenderSystem";
-import {MissionRenderSystem} from "../system/missionRenderSystem";
 import {GameEventBus} from "@lib/gameEvent/gameEventBus";
 import {ScreenChangeEvent} from "@lib/gameEvent/screenChangeEvent";
 import {Screens} from "./screens";
@@ -48,13 +43,9 @@ import {DeathRenderSystem} from "../system/deathRenderSystem";
 
 export class PlanetSurface extends GameScreenBase implements GameScreen {
 
-
-    protected _airLockComputer: WindowWidget;
-    private _playNewError: boolean = true;
-    private _startFadeOut : boolean = false;
-    private _alphaFade : number = 1;
-    private _fadeTick:number = 0;
-    private _fadeRate : number = 16;
+    private _alphaFade: number = 1;
+    private _fadeTick: number = 0;
+    private _fadeRate: number = 16;
     private _firstEnter: boolean = true;
 
 
@@ -66,7 +57,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     init(): void {
 
 
-        AudioManager.register("rockCrumble",require("../../assets/sound/rockCrumble.wav"));
+        AudioManager.register("rockCrumble", require("../../assets/sound/rockCrumble.wav"));
         AudioManager.register("drilling", require("../../assets/sound/drilling.wav"), true);
         AudioManager.register("dirtStep", require("../../assets/sound/stepDirt.wav"));
         AudioManager.register("error", require("../../assets/sound/error.wav"));
@@ -74,7 +65,6 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         AudioManager.register("generatorRunning", require("../../assets/sound/generatorRunning.wav"), true);
 
         //GlobalState.createState("powerSupplyFunctional", false);
-
 
 
         this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
@@ -95,25 +85,20 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
 
         this.registerRenderSystems([
             new RayCastRenderSystem()
-            ]);
+        ]);
 
         this.registerPostRenderSystems([
             new StormRenderSystem(),
             new HelmetRenderSystem(),
-            new MissionRenderSystem(),
-
-
-
             new DeathRenderSystem()
         ])
 
 
-
-    //    this.powerGeneration();
+        //    this.powerGeneration();
     }
 
 
-    createGameMap() : void {
+    createGameMap(): void {
 
         let grid: Array<number> = [];
 
@@ -182,7 +167,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     }
 
 
-    createTranslationMap() : void {
+    createTranslationMap(): void {
         let floor: GameEntity = new GameEntityBuilder("floor")
             .addComponent(new FloorComponent())
             .build();
@@ -201,7 +186,6 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
             .addComponent(new WallComponent())
             .addComponent(new WhenDestroyedComponent((): void => {
                 AudioManager.play("rockCrumble");
-
 
 
             }))
@@ -232,7 +216,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
             .addComponent(new CanInteractComponent(() => {
                 GameEventBus.publish(new ScreenChangeEvent(Screens.SCIENCE_LAB))
             }))
-            .addComponent(new AnimatedSpriteComponent(new AnimatedSprite(0,0,
+            .addComponent(new AnimatedSpriteComponent(new AnimatedSprite(0, 0,
                 [
                     require("../../assets/images/airLockDoorPowered.png"),
                     require("../../assets/images/airLockDoorPowered1.png"),
@@ -282,7 +266,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
             .addComponent(new CanInteractComponent())
             .addComponent(new CanDamageComponent(new Sprite(0, 0, require("../../assets/images/damagedGenerator.png"))))
             .addComponent(new WhenRepairedComponent((): void => {
-             //   GlobalState.updateState("powerSupplyFunctional", true);
+                //   GlobalState.updateState("powerSupplyFunctional", true);
                 AudioManager.play("generatorRunning");
                 logger(LogType.INFO, "Power restored");
             }))
@@ -301,24 +285,24 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     }
 
 
-    powerGeneration() : void {
-        GlobalState.registerChangeListener("powerSupplyFunctional", ()=> {
+    powerGeneration(): void {
+        GlobalState.registerChangeListener("powerSupplyFunctional", () => {
             let powerSupplyFunctional = GlobalState.getState("powerSupplyFunctional");
 
             if (powerSupplyFunctional == true) {
 
-                this._requiresPower.forEach((gameEntity : GameEntity) => {
+                this._requiresPower.forEach((gameEntity: GameEntity) => {
                     gameEntity.removeComponent("sprite");
 
-                    let onPowerAnimatedSpriteComponent : OnPowerAnimatedSpriteComponent = gameEntity.getComponent("onPowerAnimatedSprite") as OnPowerAnimatedSpriteComponent;
+                    let onPowerAnimatedSpriteComponent: OnPowerAnimatedSpriteComponent = gameEntity.getComponent("onPowerAnimatedSprite") as OnPowerAnimatedSpriteComponent;
 
                     gameEntity.addComponent(new AnimatedSpriteComponent(onPowerAnimatedSpriteComponent.animatedSprite));
                 });
             } else if (powerSupplyFunctional == false) {
 
-                this._requiresPower.forEach((gameEntity : GameEntity) => {
+                this._requiresPower.forEach((gameEntity: GameEntity) => {
                     gameEntity.removeComponent("animatedSprite");
-                    let onPowerLossSpriteComponent : OnPowerLossSpriteComponent = gameEntity.getComponent("onPowerLossSprite") as OnPowerLossSpriteComponent;
+                    let onPowerLossSpriteComponent: OnPowerLossSpriteComponent = gameEntity.getComponent("onPowerLossSprite") as OnPowerLossSpriteComponent;
                     gameEntity.addComponent(new SpriteComponent(onPowerLossSpriteComponent.sprite));
                 });
 
@@ -328,7 +312,6 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
     }
 
 
-
     onEnter(): void {
         AudioManager.play("wind");
         this.createTranslationMap();
@@ -336,7 +319,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this._walkSound = "dirtStep";
 
 
-        let player : GameEntity = this._gameEntityRegistry.getSingleton("player");
+        let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
 
         if (this._firstEnter) {
             this._camera = new Camera(67, 62, -0.66, 0.6, 0.66);
@@ -389,15 +372,19 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
                 this._alphaFade -= 0.09;
             }
 
-            Renderer.print("The Outpost", 100, 250, {family: Fonts.OxaniumBold, size: 100, color: new Color(255,255,255, this._alphaFade)})
+            Renderer.print("The Outpost", 100, 250, {
+                family: Fonts.OxaniumBold,
+                size: 100,
+                color: new Color(255, 255, 255, this._alphaFade)
+            })
         }
 
-       // Renderer.print("30 Days Until Storm ", 100, 250, {family: Fonts.OxaniumBold, size: 100, color: Colors.WHITE()})
+        // Renderer.print("30 Days Until Storm ", 100, 250, {family: Fonts.OxaniumBold, size: 100, color: Colors.WHITE()})
 
 
         this.wideScreen();
 
-        this.debug();
+        // this.debug();
     }
 
 

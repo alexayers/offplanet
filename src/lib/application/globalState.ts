@@ -10,7 +10,7 @@ export class GlobalState {
     static updateState(key: string, state: any): void {
         GlobalState._stateMap.set(key, state);
 
-        GlobalState._changeListeners.get(key).forEach((callback) : void => {
+        GlobalState._changeListeners.get(key).forEach((callback): void => {
             callback();
         });
 

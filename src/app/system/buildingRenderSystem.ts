@@ -6,15 +6,15 @@ import {World} from "@lib/rendering/rayCaster/world";
 import {InventoryComponent} from "@lib/ecs/components/inventoryComponent";
 
 
-
 export class BuildingRenderSystem implements GameRenderSystem {
 
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     private _world: World = World.getInstance();
+
     process(): void {
 
         let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
-        let inventory : InventoryComponent = player.getComponent("inventory") as InventoryComponent;
+        let inventory: InventoryComponent = player.getComponent("inventory") as InventoryComponent;
 
         if (inventory.getCurrentItem().name != "building") {
             return;
@@ -60,13 +60,13 @@ export class BuildingRenderSystem implements GameRenderSystem {
 
         let gameEntity: GameEntity = this._world.getPosition(checkMapX, checkMapY);
 
-        if (gameEntity &&  gameEntity.hasComponent("floor")) {
+        if (gameEntity && gameEntity.hasComponent("floor")) {
             return true;
         }
 
         gameEntity = this._world.getPosition(checkMapX2, checkMapY2);
 
-        if (gameEntity &&  gameEntity.hasComponent("floor")) {
+        if (gameEntity && gameEntity.hasComponent("floor")) {
             return true;
         }
 

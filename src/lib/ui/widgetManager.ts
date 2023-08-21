@@ -41,7 +41,7 @@ export class WidgetManager {
         });
     }
 
-    delete(id: string) : void {
+    delete(id: string): void {
         this._widgets.delete(id);
     }
 

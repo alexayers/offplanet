@@ -12,20 +12,20 @@ export class RepairSystem implements GameSystem {
 
     private _world: World = World.getInstance();
 
-    @processComponents(["camera","interacting"])
+    @processComponents(["camera", "interacting"])
     processEntity(gameEntity: GameEntity): void {
 
-            let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
-            let inventory: InventoryComponent = gameEntity.getComponent("inventory") as InventoryComponent;
-            let holdingItem: GameEntity = inventory.getCurrentItem();
+        let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
+        let inventory: InventoryComponent = gameEntity.getComponent("inventory") as InventoryComponent;
+        let holdingItem: GameEntity = inventory.getCurrentItem();
 
-            if (holdingItem && holdingItem.hasComponent("repair")) {
-                if (this.isDamaged(camera)) {
-                    gameEntity.removeComponent("interacting");
+        if (holdingItem && holdingItem.hasComponent("repair")) {
+            if (this.isDamaged(camera)) {
+                gameEntity.removeComponent("interacting");
 
-                    this.repairObject(camera, holdingItem);
-                }
+                this.repairObject(camera, holdingItem);
             }
+        }
 
 
     }

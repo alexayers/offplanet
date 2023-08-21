@@ -10,14 +10,14 @@ export class ConstructionSystem implements GameSystem {
     private _world: World = World.getInstance();
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
 
-    @processComponents(["camera","buildAction"],["buildAction"])
+    @processComponents(["camera", "buildAction"], ["buildAction"])
     processEntity(gameEntity: GameEntity): void {
 
-            let camera : CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
+        let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
 
-            if (this.isEmpty(camera)) {
-                this.placeWall(camera);
-            }
+        if (this.isEmpty(camera)) {
+            this.placeWall(camera);
+        }
 
 
     }
@@ -34,7 +34,7 @@ export class ConstructionSystem implements GameSystem {
 
         if (gameEntity.hasComponent("floor")) {
 
-            this._world.placeTile(checkMapX,checkMapY, this._gameEntityRegistry.getEntity("stationWall"));
+            this._world.placeTile(checkMapX, checkMapY, this._gameEntityRegistry.getEntity("stationWall"));
 
             return;
         }
@@ -42,7 +42,7 @@ export class ConstructionSystem implements GameSystem {
         gameEntity = this._world.getPosition(checkMapX2, checkMapY2);
 
         if (gameEntity.hasComponent("floor")) {
-            this._world.placeTile(checkMapX2,checkMapY2,this._gameEntityRegistry.getEntity("stationWall"));
+            this._world.placeTile(checkMapX2, checkMapY2, this._gameEntityRegistry.getEntity("stationWall"));
             return;
         }
 

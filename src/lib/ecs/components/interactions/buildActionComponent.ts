@@ -8,5 +8,4 @@ export class BuildActionComponent implements GameComponent {
     }
 
 
-
 }

@@ -35,8 +35,6 @@ import {BuildingComponent} from "../components/buildingComponent";
 import {BuildActionComponent} from "@lib/ecs/components/interactions/buildActionComponent";
 import {ConstructionSystem} from "../system/constructionSystem";
 import {logger, LogType} from "@lib/utils/loggerUtils";
-import {SuitSystem} from "../system/suitSystem";
-import {HealthSystem} from "../system/healthSystem";
 
 
 export class GameScreenBase {
@@ -72,8 +70,8 @@ export class GameScreenBase {
             new RepairSystem(),
             new DrillSystem(),
             new ConstructionSystem()
-         //   new SuitSystem(),
-         //   new HealthSystem()
+            //   new SuitSystem(),
+            //   new HealthSystem()
         ]);
 
         AudioManager.register("drill", require("../../assets/sound/drill.wav"));
@@ -118,7 +116,7 @@ export class GameScreenBase {
 
 
         if (keyCode == KeyboardInput.ONE) {
-            inventory.currentItemIdx =0;
+            inventory.currentItemIdx = 0;
             this.closeButtons();
         }
 
@@ -127,27 +125,27 @@ export class GameScreenBase {
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.THREE}`)) {
+        if (keyCode == KeyboardInput.THREE) {
             inventory.currentItemIdx = 2;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.FOUR}`)) {
+        if (keyCode == KeyboardInput.FOUR) {
             inventory.currentItemIdx = 3;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.FIVE}`)) {
+        if (keyCode == KeyboardInput.FIVE) {
             inventory.currentItemIdx = 4;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.SIX}`)) {
+        if (keyCode == KeyboardInput.SIX) {
             inventory.currentItemIdx = 5;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.UP}`)) {
+        if (keyCode == KeyboardInput.UP) {
             moveX += camera.xDir;
             moveY += camera.yDir;
             this._updateSway = true;
@@ -159,7 +157,7 @@ export class GameScreenBase {
             }
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.DOWN}`)) {
+        if (keyCode == KeyboardInput.DOWN) {
             moveX -= camera.xDir;
             moveY -= camera.yDir;
             this._updateSway = true;
@@ -172,18 +170,18 @@ export class GameScreenBase {
             }
 
         }
-        if (GlobalState.getState(`KEY_${KeyboardInput.LEFT}`)) {
+
+        if (keyCode == KeyboardInput.LEFT) {
             velocity.rotateLeft = true;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.RIGHT}`)) {
+        if (keyCode == KeyboardInput.RIGHT) {
             velocity.rotateRight = true;
             this.closeButtons();
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.SPACE}`)) {
-
+        if (keyCode == KeyboardInput.SPACE) {
 
             let inventory: InventoryComponent = this._player.getComponent("inventory") as InventoryComponent;
             let holdingItem: GameEntity = inventory.getCurrentItem();
@@ -192,9 +190,7 @@ export class GameScreenBase {
             if (holdingItem.hasComponent("drill")) {
                 player.addComponent(new DrillingActionComponent())
                 AudioManager.play("drill");
-
-            } else if (holdingItem.hasComponent("building")) {
-                player.addComponent(new BuildActionComponent())
+                player.addComponent(new InteractingActionComponent())
             } else {
                 player.addComponent(new InteractingActionComponent())
             }
@@ -202,7 +198,7 @@ export class GameScreenBase {
             this._useTool = true;
         }
 
-        if (GlobalState.getState(`KEY_${KeyboardInput.SHIFT}`)) {
+        if (keyCode == KeyboardInput.SHIFT) {
             moveX *= moveSpeed * 2;
             moveY *= moveSpeed * 2;
         } else {
@@ -245,14 +241,14 @@ export class GameScreenBase {
         this._widgetManager.mouseMove(x, y);
     }
 
-    closeButtons() : void {
+    closeButtons(): void {
         this._openButtons.forEach((widget: Widget) => {
             this._widgetManager.delete(widget.id);
         });
     }
 
 
-    createInventory() : InventoryComponent {
+    createInventory(): InventoryComponent {
         let inventory: InventoryComponent = new InventoryComponent(6);
 
         let drill: GameEntity = new GameEntityBuilder("drill")
@@ -282,13 +278,12 @@ export class GameScreenBase {
 
         inventory.addItem(drill);
         inventory.addItem(wrench);
-      //  inventory.addItem(hammer);
-     //   inventory.addItem(building);
+        //  inventory.addItem(hammer);
+        //   inventory.addItem(building);
 
 
         return inventory;
     }
-
 
 
     holdingItem(): void {
@@ -347,7 +342,7 @@ export class GameScreenBase {
         }
 
 
-     //   this.debug();
+        //   this.debug();
     }
 
 
@@ -366,7 +361,7 @@ export class GameScreenBase {
 
     registerSystems(gameSystems: Array<GameSystem>): void {
 
-        gameSystems.forEach((gameSystem: GameSystem) : void => {
+        gameSystems.forEach((gameSystem: GameSystem): void => {
             this._gameSystems.push(gameSystem);
         })
 
@@ -374,14 +369,14 @@ export class GameScreenBase {
 
     registerRenderSystems(gameRenderSystem: Array<GameRenderSystem>): void {
 
-        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem) : void => {
+        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem): void => {
             this._renderSystems.push(gameRenderSystem);
         })
     }
 
     registerPostRenderSystems(gameRenderSystem: Array<GameRenderSystem>): void {
 
-        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem) : void => {
+        gameRenderSystem.forEach((gameRenderSystem: GameRenderSystem): void => {
             this._postRenderSystems.push(gameRenderSystem);
         })
     }

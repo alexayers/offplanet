@@ -17,7 +17,7 @@ export class RayCaster {
 
     private _cameraXCoords: Array<number> = [];
     private _zBuffer: Array<number> = [];
-    private _tpWalls : Array<TransparentWall> = [];
+    private _tpWalls: Array<TransparentWall> = [];
 
 
     constructor() {
@@ -144,8 +144,8 @@ export class RayCaster {
 
 
                             if (!wallDefined) {
-                                let sprite : SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
-                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite,camera, mapX, mapY, side, [x], this._cameraXCoords);
+                                let sprite: SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
+                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite, camera, mapX, mapY, side, [x], this._cameraXCoords);
                                 this._tpWalls.push(tpWall);
                             }
                         }
@@ -161,9 +161,9 @@ export class RayCaster {
                             }
                             if (!wallDefined) {
 
-                                let sprite : SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
+                                let sprite: SpriteComponent = gameEntity.getComponent("sprite") as SpriteComponent;
 
-                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite,camera, mapX, mapY, side, [x], this._cameraXCoords);
+                                let tpWall: TransparentWall = new TransparentWall(sprite.sprite, camera, mapX, mapY, side, [x], this._cameraXCoords);
                                 this._tpWalls.push(tpWall);
                             }
                         }
@@ -217,7 +217,7 @@ export class RayCaster {
             let animatedSprite: AnimatedSpriteComponent = gameEntity.getComponent("animatedSprite") as AnimatedSpriteComponent;
             wallTexture = animatedSprite.animatedSprite.currentSprite();
         } else {
-           // throw new Error("No gameEntity found");
+            // throw new Error("No gameEntity found");
             return;
         }
 
@@ -275,7 +275,7 @@ export class RayCaster {
         let gameEntities: Array<GameEntity> = World.getInstance().getWorldMap().items;
         let sprites: Array<Sprite> = [];
 
-        if (gameEntities)  {
+        if (gameEntities) {
             for (let i: number = 0; i < gameEntities.length; i++) {
                 order[i] = i;
 

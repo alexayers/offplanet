@@ -1,10 +1,7 @@
 import {GameScreen} from "@lib/application/gameScreen";
 import {GameScreenBase} from "./gameScreenBase";
 import {RayCastRenderSystem} from "@lib/ecs/system/render/rayCastRenderSystem";
-import {DustRenderSystem} from "../system/dustRenderSystem";
-import {AirLockParticleRender} from "../system/airLockParticleRender";
 import {HelmetRenderSystem} from "../system/helmetRenderSystem";
-import {BuildingRenderSystem} from "../system/buildingRenderSystem";
 import {logger, LogType} from "@lib/utils/loggerUtils";
 import {GameRenderSystem} from "@lib/ecs/gameRenderSystem";
 import {GameEntity} from "@lib/ecs/gameEntity";
@@ -17,17 +14,15 @@ import {FloorComponent} from "@lib/ecs/components/floorComponent";
 import {WallComponent} from "@lib/ecs/components/wallComponent";
 import {SpriteComponent} from "@lib/ecs/components/spriteComponent";
 import {Sprite} from "@lib/rendering/sprite";
-import {getRandomBetween} from "@lib/utils/mathUtils";
 import {World, WorldMap} from "@lib/rendering/rayCaster/world";
 import {Colors} from "@lib/utils/colorUtils";
-import {OxygenComponent} from "../components/oxygenComponent";
-import {VelocityComponent} from "@lib/ecs/components/velocityComponent";
 
 export class TestScreen extends GameScreenBase implements GameScreen {
 
     constructor() {
         super();
     }
+
     init(): void {
 
         this.registerRenderSystems([

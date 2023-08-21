@@ -7,17 +7,16 @@ import {DamageComponent} from "@lib/ecs/components/damageComponent";
 export class SuitSystem implements GameSystem {
 
 
-
     @processComponents(["camera"])
     processEntity(gameEntity: GameEntity): void {
 
-            let suit : SuitComponent = gameEntity.getComponent("suit") as SuitComponent;
-            suit.current -= 0.01;
+        let suit: SuitComponent = gameEntity.getComponent("suit") as SuitComponent;
+        suit.current -= 0.01;
 
-            if (suit.current <= 0) {
-                suit.current = 0;
-                gameEntity.addComponent(new DamageComponent(1));
-            }
+        if (suit.current <= 0) {
+            suit.current = 0;
+            gameEntity.addComponent(new DamageComponent(1));
+        }
 
     }
 

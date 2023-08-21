@@ -10,6 +10,7 @@ import {GameEntityRegistry} from "@lib/registries/gameEntityRegistry";
 export class MissionRenderSystem implements GameRenderSystem {
 
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
+
     process(): void {
 
         let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
@@ -18,8 +19,6 @@ export class MissionRenderSystem implements GameRenderSystem {
         if (player.hasComponent("dead")) {
             return;
         }
-
-
 
 
         Renderer.print(`Station Status`, 15, 70, {
@@ -142,10 +141,7 @@ export class MissionRenderSystem implements GameRenderSystem {
         }
 
 
-
     }
-
-
 
 
 }

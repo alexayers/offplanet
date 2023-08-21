@@ -65,7 +65,7 @@ export class World {
                     this._gameMap[pos] = this._gameEntityRegistry.getLazyEntity(worldMap.translationTable.get(value).name);
                 } catch (e) {
                     logger(LogType.ERROR, `You are using the tileID ${value} without defining it in the translation map.`)
-                   throw new Error(e);
+                    throw new Error(e);
                 }
             }
         }

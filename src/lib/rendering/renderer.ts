@@ -39,7 +39,7 @@ export class Renderer {
         this._dataContext = this._dataCanvas.getContext("2d");
     }
 
-    static getContext() : CanvasRenderingContext2D  {
+    static getContext(): CanvasRenderingContext2D {
         return Renderer._ctx;
     }
 
@@ -168,7 +168,7 @@ export class Renderer {
         Renderer._ctx.beginPath();
     }
 
-    static arc(x :number, y: number, radius: number, from : number, to: number, color: Color, width: number) : void {
+    static arc(x: number, y: number, radius: number, from: number, to: number, color: Color, width: number): void {
 
 
         Renderer.setAlpha(color.alpha)
@@ -176,9 +176,8 @@ export class Renderer {
         Renderer._ctx.beginPath();
         Renderer._ctx.lineWidth = width;
         Renderer._ctx.strokeStyle = RGBtoHex(color.red, color.green, color.blue);
-        Renderer._ctx.arc(x , y , radius , from , to);
+        Renderer._ctx.arc(x, y, radius, from, to);
         Renderer._ctx.stroke();
-
 
 
     }
@@ -265,7 +264,7 @@ export class Renderer {
         Renderer._ctx.rotate(-(angle - Math.PI * 0.5));
     }
 
-    static getCanvas() : HTMLCanvasElement {
+    static getCanvas(): HTMLCanvasElement {
         return Renderer._canvas;
     }
 }

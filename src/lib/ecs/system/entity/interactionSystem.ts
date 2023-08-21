@@ -15,7 +15,6 @@ export class InteractionSystem implements GameSystem {
     processEntity(gameEntity: GameEntity): void {
 
         let camera: CameraComponent = gameEntity.getComponent("camera") as CameraComponent;
-        let interaction: CanInteractComponent = gameEntity.getComponent("interacting") as CanInteractComponent;
 
         if (!this.isDamaged(camera)) {
             if (!this.interactDoor(camera.camera)) {
@@ -23,11 +22,7 @@ export class InteractionSystem implements GameSystem {
             }
 
             gameEntity.removeComponent("interacting");
-        } else {
-            console.log("damgedd");
         }
-
-
     }
 
     isDamaged(camera: CameraComponent): boolean {

@@ -9,7 +9,7 @@ export class TransparentComponent implements GameComponent {
         this._alpha = alpha;
     }
 
-    get alpha() : number {
+    get alpha(): number {
         return this._alpha;
     }
 

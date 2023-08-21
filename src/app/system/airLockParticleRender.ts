@@ -46,7 +46,7 @@ export class AirLockParticleRender implements GameRenderSystem {
             particle.y += particle.velY;
 
             if (particle.width > 0) {
-                particle.width-= 0.65;
+                particle.width -= 0.65;
 
                 if (particle.width < 0) {
                     particle.width = 0;
@@ -54,7 +54,7 @@ export class AirLockParticleRender implements GameRenderSystem {
             }
 
             if (particle.height > 0) {
-                particle.height-= 0.65;
+                particle.height -= 0.65;
 
                 if (particle.height < 0) {
                     particle.height = 0;

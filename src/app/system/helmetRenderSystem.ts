@@ -1,5 +1,4 @@
 import {GameRenderSystem} from "@lib/ecs/gameRenderSystem";
-import {OxygenComponent} from "../components/oxygenComponent";
 import {Renderer} from "@lib/rendering/renderer";
 import {Fonts} from "../fonts";
 import {Color} from "@lib/primatives/color";
@@ -22,7 +21,7 @@ export class HelmetRenderSystem implements GameRenderSystem {
     private _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     private _visorLine: number = 0;
     private _world: World = World.getInstance();
-    private _ore: Sprite = new Sprite(0,0, require("../../assets/images/rock.png"));
+    private _ore: Sprite = new Sprite(0, 0, require("../../assets/images/rock.png"));
 
     process(): void {
 
@@ -43,12 +42,10 @@ export class HelmetRenderSystem implements GameRenderSystem {
         let hunger: HungerComponent = player.getComponent("hunger") as HungerComponent;
 
 
-        this.drawDonutChart(50,Renderer.getCanvasHeight() - 90, 20, 0,Math.PI*2)
+        //    this.drawDonutChart(50,Renderer.getCanvasHeight() - 90, 20, 0,Math.PI*2)
 
 
-        /*
-
-        let offsetY : number = 100;
+        let offsetY: number = 100;
 
         Renderer.print(`Health:`, 10, Renderer.getCanvasHeight() - offsetY, {
             family: Fonts.Oxanium,
@@ -56,12 +53,12 @@ export class HelmetRenderSystem implements GameRenderSystem {
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100,15, Colors.BLACK());
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100, 15, Colors.BLACK());
 
-        let healthPercent : number = calculateXPercentOfY(health.current, health.max);
-        let healthBar : number = calculatePercent(healthPercent, 100);
+        let healthPercent: number = calculateXPercentOfY(health.current, health.max);
+        let healthBar: number = calculatePercent(healthPercent, 100);
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, healthBar,15, new Color(168, 50, 62, 0.95))
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, healthBar, 15, new Color(168, 50, 62, 0.95))
 
         offsetY -= 30;
 
@@ -71,17 +68,17 @@ export class HelmetRenderSystem implements GameRenderSystem {
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100,15, Colors.BLACK())
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, 100, 15, Colors.BLACK())
 
-        let suitPercent : number = calculateXPercentOfY(suit.current, suit.max);
-        let suitBar : number = calculatePercent(suitPercent, 100);
+        let suitPercent: number = calculateXPercentOfY(suit.current, suit.max);
+        let suitBar: number = calculatePercent(suitPercent, 100);
 
 
-        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, suitBar,15, new Color(50, 115, 168, 0.95))
+        Renderer.rect(90, Renderer.getCanvasHeight() - offsetY - 13, suitBar, 15, new Color(50, 115, 168, 0.95))
 
         ///
 
-        offsetY  = 100;
+        offsetY = 100;
 
         Renderer.print(`Hunger:`, 210, Renderer.getCanvasHeight() - offsetY, {
             family: Fonts.Oxanium,
@@ -89,13 +86,13 @@ export class HelmetRenderSystem implements GameRenderSystem {
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100,15, Colors.BLACK())
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100, 15, Colors.BLACK())
 
 
-        let hungerPercent : number = calculateXPercentOfY(hunger.current, hunger.max);
-        let hungerBar : number = calculatePercent(hungerPercent, 100);
+        let hungerPercent: number = calculateXPercentOfY(hunger.current, hunger.max);
+        let hungerBar: number = calculatePercent(hungerPercent, 100);
 
-        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, hungerBar,15, new Color(113, 168, 50, 0.95))
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, hungerBar, 15, new Color(113, 168, 50, 0.95))
 
         offsetY -= 30;
 
@@ -105,18 +102,12 @@ export class HelmetRenderSystem implements GameRenderSystem {
             color: new Color(255, 255, 255, 0.45)
         });
 
-        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100,15, Colors.BLACK())
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, 100, 15, Colors.BLACK())
 
-        let staminaPercent : number = calculateXPercentOfY(stamina.current, stamina.max);
-        let staminaBar : number = calculatePercent(staminaPercent, 100);
+        let staminaPercent: number = calculateXPercentOfY(stamina.current, stamina.max);
+        let staminaBar: number = calculatePercent(staminaPercent, 100);
 
-        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, staminaBar,15, new Color(162, 50, 168, 0.95))
-
-
-
-
-         */
-
+        Renderer.rect(290, Renderer.getCanvasHeight() - offsetY - 13, staminaBar, 15, new Color(162, 50, 168, 0.95))
 
         this.renderHelmetEffect();
 
@@ -125,25 +116,24 @@ export class HelmetRenderSystem implements GameRenderSystem {
     drawDonutChart(x: number, y: number, radius: number, from: number, to: number) {
 
         let width: number = 8;
-        Renderer.arc(x,y, radius, from, to, new Color(0,0,0,.50), width)
+        Renderer.arc(x, y, radius, from, to, new Color(0, 0, 0, .50), width)
 
-        let colors : Array<Color> = [];
+        let colors: Array<Color> = [];
 
         colors.push(new Color(168, 50, 62, 0.95));
         colors.push(new Color(50, 115, 168, 0.95));
-        colors.push( new Color(113, 168, 50, 0.95));
+        colors.push(new Color(113, 168, 50, 0.95));
         colors.push(new Color(162, 50, 168, 0.95))
 
-        let df :number = 0;
+        let df: number = 0;
         let parts: Array<number> = [];
         parts.push(10);
         parts.push(25);
         parts.push(25);
         parts.push(25)
 
-        for(var i:number = 0; i< 1; i++)
-        {
-            Renderer.arc(x,y, radius, df, df + (Math.PI * 2) * (parts[i] / 100), colors[i], width);
+        for (var i: number = 0; i < 1; i++) {
+            Renderer.arc(x, y, radius, df, df + (Math.PI * 2) * (parts[i] / 100), colors[i], width);
             df += (Math.PI * 2) * (parts[i] / 100);
 
             /*

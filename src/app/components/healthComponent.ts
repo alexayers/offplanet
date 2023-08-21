@@ -29,6 +29,7 @@ export class HealthComponent implements GameComponent {
     set current(value: number) {
         this._current = value;
     }
+
     getName(): string {
         return "health";
     }

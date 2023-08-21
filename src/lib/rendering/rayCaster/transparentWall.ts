@@ -9,7 +9,7 @@ export class TransparentWall {
     private _yMap: number;
     private _side: number;
     private _sprite: Sprite;
-    private _xScreen: Array<number> =[];
+    private _xScreen: Array<number> = [];
     private _camera: Camera
     private _cameraXCoords;
 
@@ -103,12 +103,12 @@ export class TransparentWall {
         Renderer.setAlpha(0.25);
 
 
-        for (let x: number=this._xScreen[0]; x<this._xScreen[0] + this._xScreen.length; x++) {
-            let perpDist :number = this.getPerpDist(x);
-            let lineHeight :number = Math.round(Renderer.getCanvasHeight() / perpDist);
-            let drawStart :number = -lineHeight / 2 + Renderer.getCanvasHeight()/2;
+        for (let x: number = this._xScreen[0]; x < this._xScreen[0] + this._xScreen.length; x++) {
+            let perpDist: number = this.getPerpDist(x);
+            let lineHeight: number = Math.round(Renderer.getCanvasHeight() / perpDist);
+            let drawStart: number = -lineHeight / 2 + Renderer.getCanvasHeight() / 2;
 
-            let wallX :number;
+            let wallX: number;
             if (this._side == 0) {
                 wallX = this._camera.yPos + perpDist * this.getRayDir(x, 1);
             } else if (this._side == 1) {

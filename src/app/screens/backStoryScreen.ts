@@ -48,7 +48,7 @@ export class BackStoryScreen implements GameScreen {
 
         let offsetY: number = 150;
 
-        let line : string = "You are stranded on a small research outpost in the Vega Nexus system.";
+        let line: string = "You are stranded on a small research outpost in the Vega Nexus system.";
         line += " With limited resources and intense planetary storms your chance for rescue is slim.";
         line += " But not impossible...";
         let printLine: string = line.substring(0, this._characterPosition1);
@@ -66,7 +66,7 @@ export class BackStoryScreen implements GameScreen {
 
         let lines: Array<string> = Renderer.getLines(printLine, 600);
 
-        for (let i : number = 0; i < lines.length; i++) {
+        for (let i: number = 0; i < lines.length; i++) {
 
             Renderer.print(lines[i], 80, offsetY, {family: Fonts.Oxanium, size: 16, color: Colors.WHITE()})
             offsetY += 30;
