@@ -10,7 +10,7 @@ The main entry point is ./src/app/main.ts which initiates screens, and starts th
 
 **What is a Screen?**
 
-Everything in the engine is organized around the concept of a screen which handles input and state management for given renderer (ie: what you currently see on the screen). 
+Everything in the engine is organized around the concept of a screen which handles input and state management for a given renderer (ie: what you currently see on the screen). 
 
 1. init: A function called during initiation of the class which sets up the ECS for a given screen
 2. onEnter: A function called every time you return to the screen from another screen
