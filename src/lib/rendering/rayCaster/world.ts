@@ -5,6 +5,7 @@ import {PushWallComponent} from "@lib/ecs/components/pushWallComponent";
 import {Color} from "@lib/primatives/color";
 import {Sprite} from "@lib/rendering/sprite";
 import {GameEntityRegistry} from "@lib/registries/gameEntityRegistry";
+import {logger, LogType} from "@lib/utils/loggerUtils";
 
 //0: Closed, 1: Opening, 2: Open, 3: Closing
 
@@ -59,7 +60,13 @@ export class World {
             for (let x: number = 0; x < this._worldWidth; x++) {
                 let pos: number = x + (y * this._worldWidth);
                 let value: number = worldMap.grid[pos];
-                this._gameMap[pos] = this._gameEntityRegistry.getLazyEntity(worldMap.translationTable.get(value).name);
+
+                try {
+                    this._gameMap[pos] = this._gameEntityRegistry.getLazyEntity(worldMap.translationTable.get(value).name);
+                } catch (e) {
+                    logger(LogType.ERROR, `You are using the tileID ${value} without defining it in the translation map.`)
+                   throw new Error(e);
+                }
             }
         }
 
@@ -118,6 +125,10 @@ export class World {
             for (let x: number = 0; x < this._worldWidth; x++) {
 
                 let gameEntity: GameEntity = this.getPosition(x, y);
+
+                if (!gameEntity) {
+                    return;
+                }
 
                 if (gameEntity.hasComponent("door")) { //Standard door
                     if (this.getDoorState(x, y) == DoorState.OPENING) {//Open doors

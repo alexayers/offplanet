@@ -82,7 +82,7 @@ export class PlanetSurface extends GameScreenBase implements GameScreen {
         this._player = new GameEntityBuilder("player")
             .addComponent(this.createInventory())
             .addComponent(new OxygenComponent(50, 100))
-            .addComponent(new SuitComponent(0, 100))
+            .addComponent(new SuitComponent(100, 100))
             .addComponent(new HungerComponent(50, 100))
             .addComponent(new StaminaComponent(50, 100))
             .addComponent(new HealthComponent(50, 100))

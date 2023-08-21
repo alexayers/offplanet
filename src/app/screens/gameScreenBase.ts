@@ -71,9 +71,9 @@ export class GameScreenBase {
             new PickUpDropSystem(),
             new RepairSystem(),
             new DrillSystem(),
-            new ConstructionSystem(),
-            new SuitSystem(),
-            new HealthSystem()
+            new ConstructionSystem()
+         //   new SuitSystem(),
+         //   new HealthSystem()
         ]);
 
         AudioManager.register("drill", require("../../assets/sound/drill.wav"));
@@ -227,6 +227,10 @@ export class GameScreenBase {
         });
 
 
+        if (!this._camera) {
+            return;
+        }
+
         if (this._camera.xPos == this._lastXPos && this._camera.yPos == this._lastYPos) {
             this._updateSway = false;
             this._moves = 0;
@@ -288,6 +292,11 @@ export class GameScreenBase {
 
 
     holdingItem(): void {
+
+        if (!this._player) {
+            return;
+        }
+
         let inventory: InventoryComponent = this._player.getComponent("inventory") as InventoryComponent;
         let holdingItem: GameEntity = inventory.getCurrentItem();
 

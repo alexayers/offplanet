@@ -78,6 +78,10 @@ export class RayCaster {
 
             gameEntity = worldMap.getPosition(mapX, mapY);
 
+            if (!gameEntity) {
+                return;
+            }
+
             if (!gameEntity.hasComponent("floor")) {
                 if (gameEntity.hasComponent("door") && worldMap.getDoorState(mapX, mapY) != DoorState.OPEN) {
                     hit = 1;

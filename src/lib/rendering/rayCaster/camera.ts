@@ -3,6 +3,7 @@ import {Point} from "@lib/primatives/point";
 import {World} from "@lib/rendering/rayCaster/world";
 import {GameEntity} from "@lib/ecs/gameEntity";
 import {DoorComponent} from "@lib/ecs/components/doorComponent";
+import {logger, LogType} from "@lib/utils/loggerUtils";
 
 
 export class Camera {
@@ -32,7 +33,7 @@ export class Camera {
         let gameEntity: GameEntity = worldMap.getPosition(Math.floor(this._xPos + moveX), Math.floor(this._yPos));
 
         if (!gameEntity) {
-            throw new Error(`Undefined object found at position x:${Math.floor(this._xPos + moveX)} y:${Math.floor(this._yPos)}`)
+            logger(LogType.ERROR,`Undefined object found at position x:${Math.floor(this._xPos + moveX)} y:${Math.floor(this._yPos)}`)
             return;
         }
 

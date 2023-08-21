@@ -168,6 +168,21 @@ export class Renderer {
         Renderer._ctx.beginPath();
     }
 
+    static arc(x :number, y: number, radius: number, from : number, to: number, color: Color, width: number) : void {
+
+
+        Renderer.setAlpha(color.alpha)
+
+        Renderer._ctx.beginPath();
+        Renderer._ctx.lineWidth = width;
+        Renderer._ctx.strokeStyle = RGBtoHex(color.red, color.green, color.blue);
+        Renderer._ctx.arc(x , y , radius , from , to);
+        Renderer._ctx.stroke();
+
+
+
+    }
+
     static circle(x: number, y: number, radius: number, color: Color): void {
         Renderer._ctx.beginPath();
 
@@ -248,5 +263,9 @@ export class Renderer {
 
     static rotate(angle: number) {
         Renderer._ctx.rotate(-(angle - Math.PI * 0.5));
+    }
+
+    static getCanvas() : HTMLCanvasElement {
+        return Renderer._canvas;
     }
 }

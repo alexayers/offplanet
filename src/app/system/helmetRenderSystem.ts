@@ -43,6 +43,11 @@ export class HelmetRenderSystem implements GameRenderSystem {
         let hunger: HungerComponent = player.getComponent("hunger") as HungerComponent;
 
 
+        this.drawDonutChart(50,Renderer.getCanvasHeight() - 90, 20, 0,Math.PI*2)
+
+
+        /*
+
         let offsetY : number = 100;
 
         Renderer.print(`Health:`, 10, Renderer.getCanvasHeight() - offsetY, {
@@ -110,8 +115,46 @@ export class HelmetRenderSystem implements GameRenderSystem {
 
 
 
+         */
+
 
         this.renderHelmetEffect();
+
+    }
+
+    drawDonutChart(x: number, y: number, radius: number, from: number, to: number) {
+
+        let width: number = 8;
+        Renderer.arc(x,y, radius, from, to, new Color(0,0,0,.50), width)
+
+        let colors : Array<Color> = [];
+
+        colors.push(new Color(168, 50, 62, 0.95));
+        colors.push(new Color(50, 115, 168, 0.95));
+        colors.push( new Color(113, 168, 50, 0.95));
+        colors.push(new Color(162, 50, 168, 0.95))
+
+        let df :number = 0;
+        let parts: Array<number> = [];
+        parts.push(10);
+        parts.push(25);
+        parts.push(25);
+        parts.push(25)
+
+        for(var i:number = 0; i< 1; i++)
+        {
+            Renderer.arc(x,y, radius, df, df + (Math.PI * 2) * (parts[i] / 100), colors[i], width);
+            df += (Math.PI * 2) * (parts[i] / 100);
+
+            /*
+            canvas.beginPath();
+            canvas.strokeStyle = colors[i];
+            canvas.arc(this.x, this.y, this.radius, df, df + (Math.PI * 2) * (parts[i] / 100));
+            canvas.stroke();
+            df += (Math.PI * 2) * (parts[i] / 100);
+
+             */
+        }
 
     }
 
