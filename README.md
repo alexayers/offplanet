@@ -1,5 +1,8 @@
 # The Outpost
 
+
+![Screenshot](https://github.com/alexayers/offplanet/blob/main/images/screenshot.png?raw=true)
+
 **Run dependencies:**
 
 `npm install`
