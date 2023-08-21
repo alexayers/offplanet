@@ -12,7 +12,7 @@
 
 You can use the arrow keys to walk around. 
 
-Use 1 or 2 to switch between drill and wrench. Drill can break rocks, and wrench can fix broken items.
+Use 1 or 2 to switch between drill and wrench. Drill can break rocks on planet surface.
 
 Press space to open doors. 
 
