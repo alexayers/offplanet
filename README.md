@@ -18,8 +18,8 @@ Everything in the engine is organized around the concept of a screen which handl
 4. keyboard: A function for all your keyboard handling
 5. mouseClick: A function for processing all mouse click events
 6. mouseMove: A function for processing all mouse move events
-7. logicLoop: A function for process all your game's logic
-8. renderLoop: A function for process all your game's rendering
+7. logicLoop: A function for processing all your game's logic
+8. renderLoop: A function for processing all your game's rendering
 
 **Main Game Loop**
 
