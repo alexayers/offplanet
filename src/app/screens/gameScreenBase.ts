@@ -84,8 +84,11 @@ export class GameScreenBase {
 
             let sway: number = this._moveSway % (Math.PI * 2);
             let diff: number = 0;
-            if (sway - Math.PI <= 0) diff = -Math.PI / 30;
-            else diff = Math.PI / 30;
+            if (sway - Math.PI <= 0) {
+                diff = -Math.PI / 30;
+            } else {
+                diff = Math.PI / 30;
+            }
 
             if (sway + diff < 0 || sway + diff > Math.PI * 2) {
                 this._moveSway -= sway;
