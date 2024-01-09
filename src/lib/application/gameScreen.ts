@@ -12,7 +12,7 @@ export interface GameScreen {
 
     renderLoop(): void;
 
-    keyboard(keyCode: number): void;
+    keyboard(): void;
 
     mouseClick(x: number, y: number, mouseButton: MouseButton): void;
 

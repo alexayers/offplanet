@@ -60,20 +60,12 @@ export class TeenyTinyTwoDeeApp {
         });
 
         GameEventBus.register("keyboardDownEvent", (gameEvent: GameEvent): void => {
-
-
             GlobalState.createState(`KEY_${gameEvent.payload.keyCode}`, true);
-
-
-            this._gameScreens.get(this._currentScreen).keyboard(gameEvent.payload.keyCode);
         });
 
         GameEventBus.register("keyboardUpEvent", (gameEvent: GameEvent): void => {
 
             GlobalState.createState(`KEY_${gameEvent.payload.keyCode}`, false);
-
-
-            this._gameScreens.get(this._currentScreen).keyboard(gameEvent.payload.keyCode);
         });
 
         GameEventBus.register("mouseMoveEvent", (gameEvent: GameEvent): void => {

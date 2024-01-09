@@ -14,7 +14,7 @@ import {InventoryComponent} from "@lib/ecs/components/inventoryComponent";
 import {CameraComponent} from "@lib/ecs/components/cameraComponent";
 import {VelocityComponent} from "@lib/ecs/components/velocityComponent";
 import {GlobalState} from "@lib/application/globalState";
-import {KeyboardInput} from "@lib/input/keyboard";
+import {isKeyDown, KeyboardInput} from "@lib/input/keyboard";
 import {DrillingActionComponent} from "../components/drillingActionComponent";
 import {InteractingActionComponent} from "@lib/ecs/components/interactions/interactingActionComponent";
 import {MouseButton} from "@lib/input/mouse";
@@ -39,9 +39,8 @@ import {logger, LogType} from "@lib/utils/loggerUtils";
 
 export class GameScreenBase {
 
-
     protected _walkSound: string;
-    protected _moveSpeed: number = 0.225;
+    protected _moveSpeed: number = 0.05;
     protected _gameEntityRegistry: GameEntityRegistry = GameEntityRegistry.getInstance();
     protected _gameSystems: Array<GameSystem> = [];
     protected _renderSystems: Array<GameRenderSystem> = [];
@@ -105,7 +104,7 @@ export class GameScreenBase {
 
     }
 
-    keyboard(keyCode: number): void {
+    keyboard(): void {
 
         let moveSpeed: number = this._moveSpeed * Performance.deltaTime;
         let moveX: number = 0;
@@ -118,37 +117,37 @@ export class GameScreenBase {
         let velocity: VelocityComponent = player.getComponent("velocity") as VelocityComponent;
 
 
-        if (keyCode == KeyboardInput.ONE) {
+        if (isKeyDown(KeyboardInput.ONE)) {
             inventory.currentItemIdx = 0;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.TWO) {
+        if (isKeyDown(KeyboardInput.TWO)) {
             inventory.currentItemIdx = 1;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.THREE) {
+        if (isKeyDown(KeyboardInput.THREE)) {
             inventory.currentItemIdx = 2;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.FOUR) {
+        if (isKeyDown(KeyboardInput.FOUR)) {
             inventory.currentItemIdx = 3;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.FIVE) {
+        if (isKeyDown(KeyboardInput.FIVE)) {
             inventory.currentItemIdx = 4;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.SIX) {
+        if (isKeyDown(KeyboardInput.SIX)) {
             inventory.currentItemIdx = 5;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.UP) {
+        if (isKeyDown(KeyboardInput.UP)) {
             moveX += camera.xDir;
             moveY += camera.yDir;
             this._updateSway = true;
@@ -160,7 +159,7 @@ export class GameScreenBase {
             }
         }
 
-        if (keyCode == KeyboardInput.DOWN) {
+        if (isKeyDown(KeyboardInput.DOWN)) {
             moveX -= camera.xDir;
             moveY -= camera.yDir;
             this._updateSway = true;
@@ -174,17 +173,17 @@ export class GameScreenBase {
 
         }
 
-        if (keyCode == KeyboardInput.LEFT) {
+        if (isKeyDown(KeyboardInput.LEFT)) {
             velocity.rotateLeft = true;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.RIGHT) {
+        if (isKeyDown(KeyboardInput.RIGHT)) {
             velocity.rotateRight = true;
             this.closeButtons();
         }
 
-        if (keyCode == KeyboardInput.SPACE) {
+        if (isKeyDown(KeyboardInput.SPACE)) {
 
             let inventory: InventoryComponent = this._player.getComponent("inventory") as InventoryComponent;
             let holdingItem: GameEntity = inventory.getCurrentItem();
@@ -201,7 +200,7 @@ export class GameScreenBase {
             this._useTool = true;
         }
 
-        if (keyCode == KeyboardInput.SHIFT) {
+        if (isKeyDown(KeyboardInput.SHIFT)) {
             moveX *= moveSpeed * 2;
             moveY *= moveSpeed * 2;
         } else {
@@ -219,6 +218,9 @@ export class GameScreenBase {
     }
 
     logicLoop(): void {
+
+        this.keyboard();
+
         let player: GameEntity = this._gameEntityRegistry.getSingleton("player");
 
         this._gameSystems.forEach((gameSystem: GameSystem) => {

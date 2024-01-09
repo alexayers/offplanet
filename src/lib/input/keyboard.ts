@@ -1,3 +1,5 @@
+import {GlobalState} from "@lib/application/globalState";
+
 export enum KeyboardInput {
     ESCAPE = 27,
     SPACE = 32,
@@ -44,6 +46,11 @@ export enum KeyboardInput {
     X = 88,
     Y = 89,
     Z = 90,
+    isDown
+}
+
+export function isKeyDown(keyCode: number) : boolean {
+    return GlobalState.getState(`KEY_${keyCode}`);
 }
 
 

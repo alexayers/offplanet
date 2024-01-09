@@ -24,7 +24,7 @@ export class BackStoryScreen implements GameScreen {
         AudioManager.register("message", require("../../assets/sound/message.wav"));
     }
 
-    keyboard(keyCode: number): void {
+    keyboard(): void {
     }
 
     logicLoop(): void {

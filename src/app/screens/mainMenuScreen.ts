@@ -2,7 +2,7 @@ import {GameScreen} from "@lib/application/gameScreen";
 import {MouseButton} from "@lib/input/mouse";
 import {Renderer} from "@lib/rendering/renderer";
 import {Colors} from "@lib/utils/colorUtils";
-import {KeyboardInput} from "@lib/input/keyboard";
+import {isKeyDown, KeyboardInput} from "@lib/input/keyboard";
 import {Fonts} from "../fonts";
 import {Color} from "@lib/primatives/color";
 import {Timer} from "@lib/utils/timerUtils";
@@ -32,7 +32,7 @@ export class MainMenuScreen implements GameScreen {
         this._timer.start(100);
     }
 
-    keyboard(keyCode: number): void {
+    keyboard(): void {
 
         if (!this._timer.isTimePassed()) {
             return;
@@ -41,35 +41,35 @@ export class MainMenuScreen implements GameScreen {
 
         this._timer.reset();
 
-        switch (keyCode) {
-            case KeyboardInput.UP:
-                this._currentMenuIdx--;
 
-                if (this._currentMenuIdx < 0) {
-                    this._currentMenuIdx = this._menuItems.length - 1;
-                }
+        if (isKeyDown(KeyboardInput.UP)) {
+            this._currentMenuIdx--;
 
-                AudioManager.play("boop");
+            if (this._currentMenuIdx < 0) {
+                this._currentMenuIdx = this._menuItems.length - 1;
+            }
 
-                break;
-            case KeyboardInput.DOWN:
-                this._currentMenuIdx++;
-
-                if (this._currentMenuIdx == this._menuItems.length) {
-                    this._currentMenuIdx = 0;
-                }
-
-                AudioManager.play("boop");
-
-                break;
-            case KeyboardInput.ENTER:
-
-                if (this._currentMenuIdx == 0) {
-                    GameEventBus.publish(new ScreenChangeEvent(Screens.BACK_STORY))
-                }
-
-                break;
+            AudioManager.play("boop");
         }
+
+        if (isKeyDown(KeyboardInput.DOWN)) {
+            this._currentMenuIdx++;
+
+            if (this._currentMenuIdx == this._menuItems.length) {
+                this._currentMenuIdx = 0;
+            }
+
+            AudioManager.play("boop");
+
+        }
+        if (isKeyDown(KeyboardInput.ENTER)) {
+
+            if (this._currentMenuIdx == 0) {
+                GameEventBus.publish(new ScreenChangeEvent(Screens.BACK_STORY))
+            }
+
+        }
+
     }
 
     logicLoop(): void {
